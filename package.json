@@ -4,7 +4,7 @@
   "description": "A hub for my web projects",
   "main": "index.js",
   "scripts": {
-    "test": "node index.js"
+    "test": "echo \"Starting app...\""
   },
   "author": "Berke Özgen",
   "license": "MIT",
