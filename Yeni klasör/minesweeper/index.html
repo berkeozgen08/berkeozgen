@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Minesweeper</title>
+	<style>
+		table {
+			border: 3px solid black;
+			border-collapse: collapse;
+		}
+		td {
+			border: 1px solid grey;
+			border-collapse: collapse;
+			text-align: center;
+			font-family: Arial, Helvetica, sans-serif;
+		}
+	</style>
+	<script src="../sudoku/jquery-3.5.1.js"></script>
+	<script src="minesweeper.js"></script>
+</head>
+<body>
+	<meta name="viewport" content="initial-scale=1">
+	<table></table>
+	<button style="color: red; font-family: Arial, Helvetica, sans-serif; font-size: large;"id="flag" onclick=flagMode()>FLAG</button>
+	<!-- <button id="restart" onclick=restart()>RESTART</button> -->
+</body>
+</html>

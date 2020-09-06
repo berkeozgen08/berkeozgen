@@ -1,0 +1,20 @@
+{
+  "name": "berke",
+  "version": "1.0.0",
+  "description": "idk what this is",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\""
+  },
+  "keywords": [
+    "i",
+    "don't",
+    "know"
+  ],
+  "author": "berkeley",
+  "license": "MIT",
+  "dependencies": {
+    "express": "^4.17.1",
+    "nedb": "^1.8.0"
+  }
+}
