@@ -1,17 +1,12 @@
 {
-  "name": "berke",
+  "name": "berkeozgen",
   "version": "1.0.0",
-  "description": "idk what this is",
+  "description": "A hub for my web projects",
   "main": "index.js",
   "scripts": {
-    "test": "echo \"Error: no test specified\""
+    "test": "node index.js"
   },
-  "keywords": [
-    "i",
-    "don't",
-    "know"
-  ],
-  "author": "berkeley",
+  "author": "Berke Özgen",
   "license": "MIT",
   "dependencies": {
     "express": "^4.17.1",
