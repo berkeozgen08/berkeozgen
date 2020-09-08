@@ -6,17 +6,17 @@ let MINES;
 let SHOWING = [];
 let CLICKED = [];
 let FLAG = false;
+let first = true;
 
 $(() => {
 
 
 	getDiff();
 	initializeTable();
-	generateTable();
 
 	$("meta").attr("content", `width=${WIDTH}`);
 	$("#flag").css("width", $("table").css("width")).css("height", 30);
-	
+
 	$("td").click(function() {
 
 		if (FLAG) {
@@ -28,6 +28,7 @@ $(() => {
 			$(this).css("background-color", "rgb(184, 184, 184)");
 			copy();
 			print();
+			checkFinished();
 		}
 
 	});
@@ -52,13 +53,13 @@ function getDiff() {
 			WIDTH = 480;
 			HEIGHT = 600;
 			SIZE = 40;
-			mine_percentage = 10;
+			mine_percentage = 12;
 			break;
 		case '2':
 			WIDTH = 540;
 			HEIGHT = 600;
 			SIZE = 30;
-			mine_percentage = 15;
+			mine_percentage = 16;
 			break;
 		case '3':
 			WIDTH = 600;
@@ -67,7 +68,10 @@ function getDiff() {
 			mine_percentage = 20;
 			break;
 		default:
-			getDiff();
+			WIDTH = 480;
+			HEIGHT = 600;
+			SIZE = 40;
+			mine_percentage = 12;
 	}
 	MINES = Math.floor(WIDTH * HEIGHT / SIZE / SIZE * mine_percentage / 100);
 }
@@ -87,31 +91,31 @@ function initializeTable() {
 	}
 }
 
-function generateTable() {
+function generateTable(i, j) {
 
 	let mines = MINES;
-	
+
 	while (mines > 0) {
 		let x = Math.floor(Math.random() * (HEIGHT / SIZE));
 		let y = Math.floor(Math.random() * (WIDTH / SIZE));
 		if (TABLE[x][y] != 0) {
 			continue;
-		} else {
+		} else if (!(x >= i - 2 && x <= i + 2 && y >= j - 2 && y <= j + 2)) {
 			TABLE[x][y] = -1;
 			mines--;
 		}
 	}
 
 	for (let i = 0; i < HEIGHT / SIZE; i++) {
-		for (let j = 0; j < WIDTH / SIZE; j++) { 
-			mineCount(i,j); 
+		for (let j = 0; j < WIDTH / SIZE; j++) {
+			mineCount(i,j);
 		}
 	}
 
 }
 
 function mineCount(x, y) {
-	
+
 	if (TABLE[x][y] != -1) return;
 
 	if (y > 0 && TABLE[x][y - 1] != -1) {
@@ -221,6 +225,10 @@ function copy() {
 			let x = parseInt(i / (WIDTH / SIZE));
 			let y = i % (WIDTH / SIZE);
 			CLICKED[x][y] = true;
+			if (first) {
+				generateTable(x, y);
+				first = false;
+			}
 			onClick(x, y);
 		}
 	}
@@ -230,7 +238,7 @@ function copy() {
 function flagMode() {
 	FLAG = FLAG ? false : true;
 	if (FLAG)
-		$("#flag").css("color", "greenyellow"); 
+		$("#flag").css("color", "greenyellow");
 	else
-		$("#flag").css("color", "red"); 
+		$("#flag").css("color", "red");
 }
