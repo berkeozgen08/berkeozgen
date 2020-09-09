@@ -59,7 +59,7 @@
 				},
 				body: JSON.stringify(data)
 			}
-			fetch("/login", options);
+			fetch("login", options);
 		}
 
 		// let ip;
@@ -111,18 +111,18 @@
 				},
 				body: JSON.stringify(data)// this is what we are sending
 			}
-			let response = await fetch("/api", options);// send JSON.stringify(data) and receive a response
+			let response = await fetch("api", options);// send JSON.stringify(data) and receive a response
 			let send = await response.json();// assign the json value of response to data
 		}
 		// same as fetch("/api", options).then((response) => console.log(response)); but we did this because we need to specify our response is a json
 		// ohoo
 
 		getName();
-		
+
 		let dataArray = [];
 
 		async function getData(){
-			let response = await fetch("/api");// no options because default method is "GET" already
+			let response = await fetch("api");// no options because default method is "GET" already
 			dataArray = await response.json();
 
 			let x = dataArray.length;
