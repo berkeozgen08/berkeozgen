@@ -1,6 +1,9 @@
 # Berke Özgen
 
-Source code for my site,\n
-http://berkeozgen.azurewebsites.net\n
-https://berkeozgen.herokuapps.com\n
-http://berkeozgen.tk\n
+Source code for my site,  
+https://berkeozgen.herokuapp.com  
+http://berkeozgen.azurewebsites.net  
+http://berkeozgen.tk  
+
+Learn more about me at  
+https://berkeozgen.herokuapp.com/about  
