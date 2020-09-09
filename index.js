@@ -17,7 +17,7 @@ app.use(express.static("public"));// for client site files
 app.use(express.json({limit: "1mb"}));// for sending json with fetch()
 
 let ip;
-app.post("/api", (request, response) => {
+app.post("/snake/api", (request, response) => {
 	ip = request.headers['x-forwarded-for'] || 
 			 request.connection.remoteAddress || 
 			 request.socket.remoteAddress ||
@@ -31,7 +31,7 @@ app.post("/api", (request, response) => {
 	response.json(data);// response.send() would be more general && check index.html for fetching the response .then() (promises sth)
 });
 
-app.post("/login", (request, response) => {
+app.post("/snake/login", (request, response) => {
 	ip = request.headers['x-forwarded-for'] || 
 			 request.connection.remoteAddress || 
 			 request.socket.remoteAddress ||
@@ -45,7 +45,7 @@ app.post("/login", (request, response) => {
 	response.json(data);
 });
 
-app.get("/api", (request, response) => {
+app.get("/snake/api", (request, response) => {
 	database.find({}, (err, data) => {
 		if(err){
 			response.end();
@@ -72,6 +72,6 @@ app.get("/api", (request, response) => {
 	});
 });
 
-app.get("/login", (request, response) => {
+app.get("/snake/login", (request, response) => {
 	response.json(ip);
 });
