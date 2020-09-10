@@ -7,13 +7,13 @@ let socket = io.connect("/"); // connect to server || u can use io("url") too do
 $(".btn-default").click(function(){
 	let msg = $(".form-control")[0].value;
 	if (msg == "") return;
+	$(".form-control")[0].value = "";
 	socket.emit("message", msg);
 });
 
 $(".form-control").keypress(function (e) { // for enter key to send
 	if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
 		$('.btn-default').click();
-		$(".form-control")[0].value = "";
 	}
 });
 
