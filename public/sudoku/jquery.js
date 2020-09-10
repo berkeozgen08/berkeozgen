@@ -94,17 +94,20 @@ function start() {
 	let list = sortedArray();
 	answer_board[0] = list;
 	$("td").css("color", "#000000");
-
-	while (answer_board[8][8] == 0) {
-		answer_board = [];
-		initializeBoard(answer_board);
-		list = sortedArray();
-		answer_board[0] = list;
-		generate(answer_board);
-	}
-	console.log(legit(answer_board));
+	
+	generate(answer_board);
+	
+	count = 0;
 
 	hint(h, false);
+
+	if (h >= 30) {
+		let temp = [...input_board];
+		let c = countSolutions(temp, 0, 0, 0);
+		console.log(c);
+		if (c != 1) start();
+	}
+
 	for (let i = 0; i < $("td").length; i++) {
 		$("td")[i].innerText = "";
 	}

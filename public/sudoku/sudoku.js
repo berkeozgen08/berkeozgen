@@ -5,10 +5,10 @@ function check(row, column, board) {
 	
 	for (let i = 0; i < 9; i++) {
 		if (number === board[row][i] && i !== column) {
-		console.log("c");
+		// console.log("c");
 			return false;}
 		if (number === board[i][column] && i !== row){
-		console.log("r");
+		// console.log("r");
 			return false;}
 	}
 
@@ -21,7 +21,7 @@ function check(row, column, board) {
 	for (let i = 0; i < 3; i++) {
 		for (let j = 0; j < 3; j++) {
 			if ((square_start_r + i !== row || square_start_c + j !== column) && number === board[square_start_r + i][square_start_c + j]) {
-				console.log("s");
+				// console.log("s");
 				return false;
 			}
 		}
@@ -81,7 +81,8 @@ function generate(board) {
 					if (possible(i, j, board, k)) {
 						board[i][j] = k;
 						generate(board);
-						// board[i][j] = 0; backtracking
+						if (!legit(board))
+							board[i][j] = 0;
 					}
 				}
 				count++;
@@ -89,7 +90,7 @@ function generate(board) {
 			}
 		}
 	}
-	console.log(count);
+	console.log("count:", count);
 
 }
 
@@ -125,6 +126,26 @@ function solve(board, r, c) {
 		solve(board, i, j+1);
 	}
 	
+}
+
+function countSolutions(board, i, j, count) {
+	if (j == 9) {
+		j = 0;
+		if (++i > 8) {
+			return count + 1;
+		}
+	}
+	if (board[i][j] != 0) {
+		return countSolutions(board, i, j + 1, count);
+	}
+	for (let k = 1; k < 10 && count < 2; k++) {
+		if (possible(i, j, board, k)) {
+			board[i][j] = k;
+			count = countSolutions(board, i, j + 1, count);
+		}
+	}
+	board[i][j] = 0;
+	return count;
 }
 
 
@@ -194,4 +215,14 @@ function finished(board) {
 	}
 	return legit(board);
 
+}
+
+function toSudokuString(board) {
+	let str = "";
+	for (let i = 0; i < board.length; i++) {
+		for (let j = 0; j < board[0].length; j++) {
+			str += String(board[i][j]);
+		}	
+	}
+	return str;
 }
