@@ -101,7 +101,7 @@ function start() {
 
 	hint(h, false);
 
-	if (h >= 30) {
+	if (h >= 35) {
 		let temp = [...input_board];
 		let c = countSolutions(temp, 0, 0, 0);
 		console.log(c);
