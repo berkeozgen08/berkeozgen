@@ -9,7 +9,7 @@ let database1 = new Datastore("database1.db");
 database1.loadDatabase();
 
 let port =  process.env.PORT || 3000;
-app.listen(port, function(){// initalize the server at localhost:3000
+let server = app.listen(port, function(){// initalize the server at localhost:3000
 	console.log("listening at " + port);
 });
 
@@ -78,3 +78,23 @@ app.get("/snake/api", (request, response) => {
 app.get("/snake/login", (request, response) => {
 	// response.json(ip);
 });
+
+
+let socket = require("socket.io");
+
+let io = socket(server); // input and output on server
+
+io.sockets.on("connection", (socket) => { // when someone connects,
+	console.log("new connection: " + socket.id);
+	socket.on("message", message); // when recieved, run function
+	io.sockets.emit("online", Object.keys(io.sockets.sockets).length);
+	socket.on("disconnect", () => {
+		io.sockets.emit("online", Object.keys(io.sockets.sockets).length);
+	});
+});
+
+function message(data){
+	console.log(data);
+	// socket.broadcast.emit("asd", data); // sends the data to all sockets except itself
+	io.sockets.emit("message", data); // includes the client that sent the message 
+}
