@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Chatling</title>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<style>
+		.message-bubble
+		{
+			/* padding: 17px 0px 17px 0px; */
+		}
+
+		p {
+			margin-bottom: 0px;
+			height: 58px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+    		overflow: hidden;
+			overflow-wrap: break-word;
+		}
+
+		.message-bubble:nth-child(even) {
+			background-color: #F5F5F5;
+		}
+
+		.message-bubble > *
+		{
+			padding-left: 10px;
+		}
+
+		.panel-body { padding: 0px; }
+
+		.panel-heading { background-color: #3d6da7 !important; color: white !important; }
+
+	</style>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+	<script src="https://code.jquery.com/jquery-3.5.0.min.js"></script>
+	<!-- <script>
+		$(document).ready(function(){
+			$(".btn-default").click(function(){
+				socket.emit("message", $(".form-control")[0].value); // send data under a name
+			});
+		});
+	</script> -->
+</head>
+<body>
+	<div class="panel panel-default">
+		<div class="panel-heading">
+			<div class="row online mx-0 mx-0"> <!-- invisible characters -->
+				<h2 class="pl-2">Online: <span id="online">‎</span></h2>
+			</div>
+		</div>
+		<div class="panel-body">
+			<div class="container col-md-12">
+			</div>
+		</div>
+		<div class="panel-footer pt-1">
+			<div class="input-group">
+				<input type="text" class="form-control">
+				<button class="btn btn-default border" type="button">Send</button>
+			</div>
+		</div>
+	</div>
+	<script src="chat.js"></script>
+</body>
+</html>
