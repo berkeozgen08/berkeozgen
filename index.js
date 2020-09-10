@@ -16,14 +16,14 @@ app.listen(port, function(){// initalize the server at localhost:3000
 app.use(express.static("public"));// for client site files
 app.use(express.json({limit: "1mb"}));// for sending json with fetch()
 
-let ip;
+// let ip;
 app.post("/snake/api", (request, response) => {
-	ip = request.headers['x-forwarded-for'] || 
-			 request.connection.remoteAddress || 
-			 request.socket.remoteAddress ||
-			 (request.connection.socket ? request.connection.socket.remoteAddress : null);
+	// ip = request.headers['x-forwarded-for'] ||
+	// 		 request.connection.remoteAddress ||
+	// 		 request.socket.remoteAddress ||
+	// 		 (request.connection.socket ? request.connection.socket.remoteAddress : null);
 	let data = request.body;
-	data.ip = ip;
+	// data.ip = ip;
 	let time = Date(Date.now()).toString();// Date.now() gives miliseconds passed till 1970, Date gives the current date, toString well i think u know
 	data.time = time;// add a time parameter to the date object
 	database.insert(data);// add data to the database
@@ -32,12 +32,12 @@ app.post("/snake/api", (request, response) => {
 });
 
 app.post("/snake/login", (request, response) => {
-	ip = request.headers['x-forwarded-for'] || 
-			 request.connection.remoteAddress || 
-			 request.socket.remoteAddress ||
-			 (request.connection.socket ? request.connection.socket.remoteAddress : null);
+	// ip = request.headers['x-forwarded-for'] ||
+	// 		 request.connection.remoteAddress ||
+	// 		 request.socket.remoteAddress ||
+	// 		 (request.connection.socket ? request.connection.socket.remoteAddress : null);
 	let data = request.body;
-	data.ip = ip;
+	// data.ip = ip;
 	let time = Date(Date.now()).toString();
 	data.time = time;
 	database1.insert(data);
@@ -50,10 +50,13 @@ app.get("/snake/api", (request, response) => {
 		if(err){
 			response.end();
 			console.log("Ran into an error");
-			return;			
+			return;
 		}
 
-		for(i of data) { delete i.ip; delete i.time; }
+		for(i of data) {
+			// delete i.ip;
+			delete i.time;
+		}
 
 		data.sort(function(a, b){return b.score-a.score});
 
@@ -61,17 +64,17 @@ app.get("/snake/api", (request, response) => {
 		if(data.length > 9){
 			x = 9;
 		}
-		
+
 		temp = [];
-		
+
 		for(let i = 0; i < x; i++) {
 			temp[i] = data[i];
 		}
-		
+
 		response.json(temp);
 	});
 });
 
 app.get("/snake/login", (request, response) => {
-	response.json(ip);
+	// response.json(ip);
 });
