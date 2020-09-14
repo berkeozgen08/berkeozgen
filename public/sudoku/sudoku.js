@@ -226,3 +226,19 @@ function toSudokuString(board) {
 	}
 	return str;
 }
+
+function toSudokuBoard(board) {
+	let arr = [];
+	for (let i = 0; i < 81; i += 9) {
+		arr[i / 9] = board.substring(i, i + 9);
+	}
+	for (let i = 0; i < 9; i++) {
+		arr[i] = arr[i].split("");
+	}
+	for (let i = 0; i < 9; i++) {
+		for (let j = 0; j < 9; j++) {
+			arr[i][j] = parseInt(arr[i][j]);
+		}
+	}
+	return arr;
+}

@@ -5,7 +5,7 @@ let hints = 40;
 
 $(() => {
 
-	start();
+	start(window.location.search);
 	
 	$("td").click(function() {
 		let v = prompt();
@@ -47,7 +47,20 @@ $(() => {
 
 	$("#generate").click(() => {
 		hints = slider.value;
-		start();
+		start(null);
+	});
+	
+	$("#import").click(() => {
+		let board = $("#board").val();
+		if (board.length === 81 && !isNaN(board)) start("?" + board);
+	});
+	
+	$("#export").click(() => {
+		$("#board").val(toSudokuString(input_board));
+	});
+	
+	$("#url").click(() => {
+		$("#board").val(window.location.origin + window.location.pathname + "?" + toSudokuString(input_board));
 	});
 	
 });
@@ -66,7 +79,7 @@ function copy(board) {
 
 function hint(h, bool) {
 	if (finished(input_board)) {
-		start();
+		start(null);
 		return;
 	}
 	for (; h > 0; h--) {
@@ -84,28 +97,32 @@ function hint(h, bool) {
 	}
 }
 
-function start() {
+function start(param) {
 	$("td").removeClass();
 	input_board = [];
 	answer_board = [];
-	let h = hints;
-	initializeBoard(input_board);
-	initializeBoard(answer_board);
-	let list = sortedArray();
-	answer_board[0] = list;
-	$("td").css("color", "#000000");
-	
-	generate(answer_board);
-	
-	count = 0;
+	if (param === null || param.length !== 82 || isNaN(param.substring(1))) {
+		initializeBoard(input_board);
+		initializeBoard(answer_board);
+		let h = hints;
+		let list = sortedArray();
+		answer_board[0] = list;
+		$("td").css("color", "#000000");
+		
+		generate(answer_board);
+		
+		count = 0;
 
-	hint(h, false);
+		hint(h, false);
 
-	if (h >= 30) {
-		let temp = [...input_board];
-		let c = countSolutions(temp, 0, 0, 0);
-		console.log(c);
-		if (c != 1) start();
+		if (h >= 30) {
+			let temp = [...input_board];
+			let c = countSolutions(temp, 0, 0, 0);
+			console.log(c);
+			if (c != 1) start(param);
+		}
+	} else {
+		input_board = toSudokuBoard(param.substring(1));
 	}
 
 	for (let i = 0; i < $("td").length; i++) {
