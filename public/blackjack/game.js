@@ -38,6 +38,8 @@ socket.on("dealer", (dealer) => {
 
 });
 
+let scores = new Map();
+
 socket.on("players", (players) => {
 	let node = document.getElementById("players");
 	while (node.firstChild)
@@ -47,8 +49,11 @@ socket.on("players", (players) => {
 		let foo = document.createElement("div");
 		foo.setAttribute("id", "player" + players[i][1].index);
 
+		if (!scores.has(players[i][1].name)) scores.set(players[i][1].name, 0);
+
 		let name = document.createElement("h3");
-		name.innerText = players[i][1].name;
+		name.innerText = players[i][1].name + ` (${scores.get(players[i][1].name)})`;
+		// name.innerText = players[i][1].name;
 		name.setAttribute("class", "name");
 		foo.appendChild(name);
 
@@ -61,6 +66,13 @@ socket.on("players", (players) => {
 			foo.appendChild(bar);
 		}
 		else if (players[i][1].state.won) {
+			let bar = document.createElement("p");
+			bar.innerText = "Won with " + players[i][1].value;
+			foo.appendChild(bar);
+			
+			scores.set(players[i][1].name, scores.get(players[i][1].name) + 1);
+		}
+		else if (players[i][1].state.hit21) {
 			let bar = document.createElement("p");
 			bar.innerText = "Won with " + players[i][1].value;
 			foo.appendChild(bar);

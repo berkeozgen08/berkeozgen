@@ -187,7 +187,8 @@ class Player {
 			bust: false,
 			won: false,
 			lost: false,
-			tied: false
+			tied: false,
+			hit21: false
 		}
 		this.value;
 		this.getValue();
@@ -282,7 +283,7 @@ function hit(socket) {
 			}
 		}
 		else if (players.get(socket.id).getValue() == 21) {
-			players.get(socket.id).state.won = true;
+			players.get(socket.id).state.hit21 = true;
 			io.sockets.emit("players", Array.from(players));
 			if (++turn >= arr.length) {
 				turn = 0;
