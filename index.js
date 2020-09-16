@@ -87,7 +87,7 @@ let io = socket(server); // input and output on server
 function message(data){
 	console.log(data);
 	// socket.broadcast.emit("asd", data); // sends the data to all sockets except itself
-	io.sockets.emit("message", data); // includes the client that sent the message 
+	io.sockets.emit("messageChatling", data); // includes the client that sent the message 
 }
 
 
