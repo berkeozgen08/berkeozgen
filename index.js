@@ -84,15 +84,6 @@ let socket = require("socket.io");
 
 let io = socket(server); // input and output on server
 
-io.sockets.on("connection", (socket) => { // when someone connects,
-	console.log("new connection: " + socket.id);
-	socket.on("message", message); // when recieved, run function
-	io.sockets.emit("online", Object.keys(io.sockets.sockets).length);
-	socket.on("disconnect", () => {
-		io.sockets.emit("online", Object.keys(io.sockets.sockets).length);
-	});
-});
-
 function message(data){
 	console.log(data);
 	// socket.broadcast.emit("asd", data); // sends the data to all sockets except itself
@@ -338,8 +329,14 @@ io.sockets.on("connection", (socket) => {
 	
 	socket.on("stay", () => stay(socket));
 	
+	
+	//chatling
+	socket.on("messageChatling", message); 
+	io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
+	
 	socket.on("disconnect", () => {
 		lostConnection(socket);
+		io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
 		io.sockets.emit("online", Array.from(players));
 	});
 });

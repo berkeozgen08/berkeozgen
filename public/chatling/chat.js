@@ -8,7 +8,7 @@ $(".btn-default").click(function(){
 	let msg = $(".form-control")[0].value;
 	if (msg == "") return;
 	$(".form-control")[0].value = "";
-	socket.emit("message", msg);
+	socket.emit("messageChatling", msg);
 });
 
 $(".form-control").keypress(function (e) { // for enter key to send
@@ -17,7 +17,7 @@ $(".form-control").keypress(function (e) { // for enter key to send
 	}
 });
 
-socket.on("message", (data) => {
+socket.on("messageChatling", (data) => {
 	updateMessages(data);
 });
 
@@ -28,7 +28,7 @@ function updateMessages(data) {
 	$(".message-bubble").last().children().first().text(data);
 }
 
-socket.on("online", (data) => {
+socket.on("onlineChatling", (data) => {
 	$("#online").text(data);
 });
 
