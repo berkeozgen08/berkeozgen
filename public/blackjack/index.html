@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=450, initial-scale=1.0">
+	<title>Blackjack</title>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
+	<script src="game.js"></script>
+	<style>
+		html {
+			background-color: #076324;
+			background-image: url("background.png");
+			font-family: verdana;
+    		color: white;
+		}
+		#dealer {
+			display: flex;
+			margin-bottom: 48px;
+			border: solid;
+		}
+		#players > div {
+			display: flex;
+			margin-top: 8px;
+			margin-bottom: 8px;
+			border: solid;
+    		border-width: thin;
+		}
+		button {
+			margin-top: 8px;
+			width: 130px;
+			height: 40px;
+			font-size: xx-large;
+		}
+		.name, div > p {
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.name {
+			margin: 0px;
+			padding: 8px;
+			width: 100px;
+			overflow-wrap: anywhere;
+			text-align: center;
+		}
+		main {
+			margin: 16px;
+			width: max-content;
+		}
+		div > p {
+			margin: 16px;
+		}
+		.card {
+			margin-left: 4px;
+		}
+	</style>
+</head>
+<body>
+	<h1>Online: <span id="online"></span></h1>
+	<main>
+		<div id="dealer"></div>
+		<div id="players"></div>
+		<button type="button" onclick=hit()>Hit</button>
+		<button type="button" onclick=stay()>Stay</button>
+		<p>Turn: <span id="turn"></span></p>
+		<p>You are: <span id="name"></span></p>
+	</main>
+</body>
+</html>
