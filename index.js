@@ -259,11 +259,12 @@ function lostConnection(socket) {
 		if (arr.length > 1) arr.splice(turn, 1);
 		if (arr.length <= turn) turn = 0;
 	}
-	if (arr.length > 0) 
-		io.sockets.emit("turn", {name: arr[turn][1].name, index: arr[turn][1].index});
 
 	players.delete(socket.id)
 	io.sockets.emit("players", Array.from(players));
+	
+	if (arr.length > 0) 
+		io.sockets.emit("turn", {name: arr[turn][1].name, index: arr[turn][1].index});
 }
 
 function hit(socket) {
