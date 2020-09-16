@@ -25,7 +25,8 @@ playcount=1;
 
 var state;
 
-setInterval(game, 60);
+let paused = false;
+let interval = setInterval(game, 60);
 
 xv=yv=0;
 snakex=snakey=300;
@@ -116,6 +117,15 @@ function game(){
 var lastx;
 
 function keypress(x){
+	if (x.keyCode == 80) {
+		if (paused) {
+			interval = setInterval(game, 60);
+			paused = false;
+		} else {
+			clearInterval(interval);
+			paused = true;
+		}
+	}
     if(x.keyCode==13){
         snakex=snakey=300;
         applex=Math.floor(Math.random()*20)*30;
