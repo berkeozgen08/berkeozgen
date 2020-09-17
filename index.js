@@ -157,7 +157,7 @@ let dealer = {
 							else
 								i[1].state.lost = true;
 						} else {
-							if (i[1].state.staying)
+							if (i[1].state.standing)
 								i[1].state.won = true;
 						}
 					}
@@ -183,12 +183,11 @@ class Player {
 		this.cards = [{value: deck[parseInt(Math.random() * 13)], suit: parseInt(Math.random() * 4)},
 					  {value: deck[parseInt(Math.random() * 13)], suit: parseInt(Math.random() * 4)}];
 		this.state = {
-			staying: false,
+			standing: false,
 			bust: false,
 			won: false,
 			lost: false,
-			tied: false,
-			hit21: false
+			tied: false
 		}
 		this.value;
 		this.getValue();
@@ -227,7 +226,7 @@ class Player {
 		this.cards = [{value: deck[parseInt(Math.random() * 13)], suit: parseInt(Math.random() * 4)},
 					  {value: deck[parseInt(Math.random() * 13)], suit: parseInt(Math.random() * 4)}];
 		this.state = {
-			staying: false,
+			standing: false,
 			bust: false,
 			won: false,
 			lost: false,
@@ -283,7 +282,7 @@ function hit(socket) {
 			}
 		}
 		else if (players.get(socket.id).getValue() == 21) {
-			players.get(socket.id).state.hit21 = true;
+			players.get(socket.id).state.standing = true;
 			io.sockets.emit("players", Array.from(players));
 			if (++turn >= arr.length) {
 				turn = 0;
@@ -296,11 +295,11 @@ function hit(socket) {
 	}
 }
 
-function stay(socket) {
+function stand(socket) {
 	if (waiting) return;
 	let arr = Array.from(players);
 	if (arr.length > 0 && arr[turn][1] == players.get(socket.id)) {
-		players.get(socket.id).state.staying = true;
+		players.get(socket.id).state.standing = true;
 		io.sockets.emit("players", Array.from(players));
 		if (++turn >= arr.length) {
 			turn = 0;
@@ -329,7 +328,7 @@ io.sockets.on("connection", (socket) => {
 	
 	socket.on("hit", () => hit(socket));
 	
-	socket.on("stay", () => stay(socket));
+	socket.on("stand", () => stand(socket));
 	
 	
 	//chatling

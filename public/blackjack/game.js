@@ -72,11 +72,6 @@ socket.on("players", (players) => {
 			
 			scores.set(players[i][1].name, scores.get(players[i][1].name) + 1);
 		}
-		else if (players[i][1].state.hit21) {
-			let bar = document.createElement("p");
-			bar.innerText = "Won with " + players[i][1].value;
-			foo.appendChild(bar);
-		}
 		else if (players[i][1].state.lost) {
 			let bar = document.createElement("p");
 			bar.innerText = "Lost with " + players[i][1].value;
@@ -87,9 +82,9 @@ socket.on("players", (players) => {
 			bar.innerText = "Tied with " + players[i][1].value;
 			foo.appendChild(bar);
 		}
-		else if (players[i][1].state.staying) {
+		else if (players[i][1].state.standing) {
 			let bar = document.createElement("p");
-			bar.innerText = "Staying with " + players[i][1].value;
+			bar.innerText = "Standing with " + players[i][1].value;
 			foo.appendChild(bar);
 		}
 		else {
@@ -115,8 +110,8 @@ function hit() {
 	socket.emit("hit");
 }
 
-function stay() {
-	socket.emit("stay");
+function stand() {
+	socket.emit("stand");
 }
 
 function getImage(card) {
