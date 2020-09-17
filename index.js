@@ -157,7 +157,7 @@ let dealer = {
 							else
 								i[1].state.lost = true;
 						} else {
-							if (i[1].state.staying)
+							if (i[1].state.staying || i[1].state.hit21)
 								i[1].state.won = true;
 						}
 					}
