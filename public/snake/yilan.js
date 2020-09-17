@@ -105,8 +105,7 @@ function game(){
                 state="lost";
                 if(score>document.getElementById("highest").textContent){
                     document.getElementById("highest").textContent = score;
-					sendData();
-					getData();
+					sendData().then(getData());
 				}
 				tail = 0;
             }
