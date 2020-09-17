@@ -118,6 +118,7 @@
 			}
 			let response = await fetch(proxyUrl + targetUrl, options);// send JSON.stringify(data) and receive a response
 			let send = await response.json();// assign the json value of response to data
+			getData();
 		}
 		// same as fetch("/api", options).then((response) => console.log(response)); but we did this because we need to specify our response is a json
 		// ohoo
