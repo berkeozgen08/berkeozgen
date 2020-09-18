@@ -257,7 +257,10 @@ function lostConnection(socket) {
 	let arr = Array.from(players);
 	if (arr.length > 0 && arr[turn][0] == socket.id) {
 		if (arr.length > 1) arr.splice(turn, 1);
-		if (arr.length <= turn) turn = 0;
+		if (arr.length <= turn) {
+			turn = 0;
+			dealer.play();
+		}
 	}
 
 	players.delete(socket.id)
