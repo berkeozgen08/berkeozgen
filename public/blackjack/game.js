@@ -1,19 +1,49 @@
-const socket = io.connect("/");
+const socket = io.connect("/",{
+	"transports": ['websocket']
+ });
 
-socket.emit("name", prompt("Enter your name") || "no name");
+let name = prompt("Enter your name") || "no name";
+socket.emit("name", name);
+
+function sendMessage(msg) {
+	socket.emit("message", name + ": " + msg);
+	document.getElementById("chatling").contentWindow.updateMessages(name + ": " + msg);
+}
+
+socket.on("message", (data) => {
+	let inner = document.getElementById("chatling").contentWindow;
+	inner.updateMessages(data);
+	document.getElementById("message").play();
+	let unread = inner.document.getElementById("unread");
+	let frame = document.getElementById("frame");
+	if (frame.getAttribute("show") == "no") {
+		let notf = document.getElementById("notf");
+		notf.innerText = ++unread.innerText;
+		$("#notf").fadeIn(100);
+	}
+});
 
 socket.on("self", (player) => {
 	document.getElementById("name").innerText = player.name;
 });
 
-socket.on("online", (players) => {
-	let str = "";
-	for (let i of players) {
-		str += i[1].name + ", ";
+let slided = true;
+let time = 25;
+let timer = setInterval(() => {
+	document.getElementById("time").innerText = --time;
+	if (time <= 0) {
+		stand();
 	}
-	if (players.length == 0) str = "0";
-	document.getElementById("online").innerText = str.substring(0, str.length > 2 ? str.length - 2 : str.length);
-});
+}, 1000);
+
+// socket.on("online", (players) => {
+// 	let str = "";
+// 	for (let i of players) {
+// 		str += i[1].name + ", ";
+// 	}
+// 	if (players.length == 0) str = "0";
+// 	document.getElementById("online").innerText = str.substring(0, str.length > 2 ? str.length - 2 : str.length);
+// });
 
 socket.on("dealer", (dealer) => {
 	let node = document.getElementById("dealer");
@@ -25,12 +55,17 @@ socket.on("dealer", (dealer) => {
 	foo.setAttribute("class", "name");
 	document.getElementById("dealer").appendChild(foo);
 
+	let cards = document.createElement("div");
+	cards.setAttribute("class", "cards");
+
 	for (let i = 0; i < dealer.cards.length; i++) {
 		if (i == 0 && !dealer.shown)
-			document.getElementById("dealer").appendChild(getImage(0));
+			cards.appendChild(getImage(0));
 		else
-			document.getElementById("dealer").appendChild(getImage(dealer.cards[i]));
+			cards.appendChild(getImage(dealer.cards[i]));
 	}
+
+	document.getElementById("dealer").appendChild(cards);
 
 	let bar = document.createElement("p");
 	bar.innerText = "Dealer has " + dealer.value;
@@ -57,9 +92,15 @@ socket.on("players", (players) => {
 		name.setAttribute("class", "name");
 		foo.appendChild(name);
 
+		let cards = document.createElement("div");
+		cards.setAttribute("class", "cards");
+
 		for (let j = 0; j < players[i][1].cards.length; j++) {
-			foo.appendChild(getImage(players[i][1].cards[j]));
+			cards.appendChild(getImage(players[i][1].cards[j]));
 		}
+
+		foo.appendChild(cards);
+		
 		if (players[i][1].state.bust) {
 			let bar = document.createElement("p");
 			bar.innerText = "Bust with " + players[i][1].value;
@@ -97,12 +138,13 @@ socket.on("players", (players) => {
 });
 
 socket.on("turn", (turn) => {
-	let arrow = document.createElement("p");
-	arrow.innerText = "<--";
+	time = 25;
+	for (let i of document.getElementsByClassName("name"))
+		i.style.color = "white";
 	if (turn.name == "Dealer")
-		document.getElementById("dealer").appendChild(arrow);
+		document.getElementById("dealer").children[0].style.color = "red";
 	else 
-		document.getElementById("player" + turn.index).appendChild(arrow);
+		document.getElementById("player" + turn.index).children[0].style.color = "red";
 	document.getElementById("turn").innerText = turn.name;
 });
 
@@ -120,7 +162,7 @@ function getImage(card) {
 	if (card == 0) {
 		let node = document.createElement("div");
 		node.setAttribute("class", "card");
-		node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(back.png); background-size: ${width}px ${height}px;`);
+		node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(/back.png); background-size: ${width}px ${height}px;`);
 		return node;
 	}
 	let xBorder = 2;
@@ -150,6 +192,32 @@ function getImage(card) {
 	xOffSet -= xBorder;
 	let node = document.createElement("div");
 	node.setAttribute("class", "card");
-	node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(cards.png) ${xOffSet}px ${yOffSet}px;`);
+	node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(/cards.png) ${xOffSet}px ${yOffSet}px;`);
 	return node;
 }
+
+$(() => {
+	// $("#notf").hide();
+	document.getElementById("message").volume = 0.1;
+	$("#chatslider").click(() => {
+		if (slided) {
+			$("#frame").animate({
+				bottom: "+=303"
+			}, 1000);
+			slided = false;
+			$("#unread", $("#chatling")[0].contentWindow.document).text("0");
+			$("#notf").fadeOut(200);
+			$("#frame").attr("show", "yes");
+		} else {
+			$("#frame").animate({
+				bottom: "-=303" 
+			}, 1000);
+			slided = true;
+			$("#frame").attr("show", "no");
+		}
+	});
+	let n = document.createElement("meta");
+	n.setAttribute("name", "viewport");
+	n.setAttribute("content", `width=device-width, initial-scale=${document.getElementsByTagName("html")[0].clientWidth / 480}`);
+	document.getElementsByTagName("head")[0].appendChild(n);
+});

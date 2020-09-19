@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.5.2/css/bootstrap.min.css" integrity="sha384-JcKb8q3iqJ61gNV9KGb8thSsNjpSL0n8PARn9HuZOnIxN0hoP+VmmDGMN5t9UJ0Z" crossorigin="anonymous">
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+	<script src="/jquery-3.5.1.js"></script>
+	<style>
+		html {
+			background-color: #076324;
+		}
+		.message-bubble
+		{
+			/* padding: 17px 0px 17px 0px; */
+			min-width: 100%;
+			margin: initial;
+		}
+
+		p {
+			margin-bottom: 0px;
+			height: 47px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+
+		.message-bubble:nth-child(even) {
+			background-color: #F5F5F5;
+		}
+
+		.message-bubble > *
+		{
+			padding-left: 10px;
+		}
+
+		.panel-body { 
+			padding: 0px; 
+			display: block;
+			height: 265px;
+			overflow: scroll;
+		}
+		.cont {
+			min-width: fit-content;
+		}
+
+	</style>
+	<!-- <script>
+		$(document).ready(function(){
+			$(".btn-default").click(function(){
+				socket.emit("message", $(".form-control")[0].value); // send data under a name
+			});
+		});
+	</script> -->
+</head>
+<body>
+	<span id="unread" hidden="yes">0</span>
+	<div class="panel panel-default">
+		<div class="panel-body">
+			<div class="cont">
+			</div>
+		</div>
+		<div class="panel-footer">
+			<div class="input-group">
+				<input type="text" class="form-control">
+				<button class="btn btn-default border" type="button">Send</button>
+			</div>
+		</div>
+	</div>
+	<script src="chat.js"></script>
+</body>
+</html>

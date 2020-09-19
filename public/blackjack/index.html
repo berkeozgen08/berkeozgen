@@ -2,16 +2,18 @@
 <html lang="en">
 <head>
 	<meta charset="UTF-8">
-	<meta name="viewport" content="width=450, initial-scale=1.0">
+	<meta name="viewport" content="width=device-width">
 	<title>Blackjack</title>
-	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
-	<script src="game.js"></script>
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js" integrity="sha512-v8ng/uGxkge3d1IJuEo6dJP8JViyvms0cly9pnbfRxT6/31c3dRWxIiwGnMSWwZjHKOuY3EVmijs7k1jz/9bLA==" crossorigin="anonymous"></script>
+	<script src="/jquery-3.5.1.js"></script>
+	<script src="https://code.jquery.com/ui/1.12.1/jquery-ui.js" integrity="sha256-T0Vest3yCU7pafRw9r+settMBX6JkKN06dqBnpQ8d30=" crossorigin="anonymous"></script><script src="game.js"></script>
 	<style>
 		html {
 			background-color: #076324;
-			background-image: url("background.png");
+			background-image: url("/background.png");
 			font-family: verdana;
     		color: white;
+			height: 100vh;
 		}
 		#dealer {
 			display: flex;
@@ -31,7 +33,7 @@
 			height: 40px;
 			font-size: xx-large;
 		}
-		.name, div > p {
+		.name, div > p, #chatslider, #notf {
 			display: flex;
 			justify-content: center;
 			align-items: center;
@@ -44,7 +46,8 @@
 			text-align: center;
 		}
 		main {
-			margin: 16px;
+			margin: 8px;
+			margin-top: 24px;
 			width: max-content;
 		}
 		div > p {
@@ -52,18 +55,89 @@
 		}
 		.card {
 			margin-left: 4px;
+			float: left;
+		}
+		#chatling {
+			border: none;
+			margin: 0;
+			width: 480px;
+			height: inherit;
+		}
+		#slide {
+			height: 304px;
+		}
+		#dealer, #players, button, main > p {
+			margin-left: 8px;
+			margin-right: 8px;
+		}
+		#chatslider {
+			background-color: #3d6da7 !important;
+			color: white !important; 
+			margin: 0;
+			position: relative;
+			top: 0;
+			height: 30px;
+			border-top-left-radius: 20px;
+			border-top-right-radius: 20px;
+  			cursor: pointer;
+		}
+		#frame {
+			width: 480px;
+			height: 333px;
+			position: fixed;
+			bottom: -303px;
+			right: 0;
+		}
+		#notf {
+			width: 45px;
+			height: inherit;
+			position: absolute;
+			margin: 0;
+			border-top-right-radius: inherit;
+			background-color: orange;
+			right: 0;
+		}
+		@media (max-width: 769px) {
+			#frame {
+				left: 0;
+			}
+			.cards {
+				max-width: 150px;
+			}
+			.card {
+				float: left;
+			}
+			main {
+				width: auto;
+			}
+			div > p {
+				margin-right: 0;
+			}
 		}
 	</style>
 </head>
 <body>
-	<h1>Online: <span id="online"></span></h1>
+	<!-- <h1>Online: <span id="online"></span></h1> -->
+	<audio id="message">
+		<source src="/message.mp3">
+	</audio>
 	<main>
 		<div id="dealer"></div>
 		<div id="players"></div>
-		<button type="button" onclick=hit()>Hit</button>
-		<button type="button" onclick=stand()>Stand</button>
+		<button type="button" onclick=hit() style="margin-right: 0">Hit</button>
+		<button type="button" onclick=stand() style="margin: 0">Stand</button>
+		<p>Time left: <span id="time">25</span></p>
 		<p>Turn: <span id="turn"></span></p>
-		<p>You are: <span id="name"></span></p>
+		<p style="margin-bottom: 40px;">You are: <span id="name"></span></p>
 	</main>
+	<div id="frame" show="no">
+		<div id="chatslider">
+			<h3>Chat</h3>
+			<h3 id="notf" style="display: none"></h3>
+		</div>
+		<div id="slide">
+			<iframe src="/chat.html" scrolling="no" id="chatling"></iframe>
+		</div>
+	</div>
 </body>
 </html>

@@ -84,7 +84,7 @@ let socket = require("socket.io");
 
 let io = socket(server); // input and output on server
 
-function message(data){
+function messageChatling(data){
 	console.log(data);
 	// socket.broadcast.emit("asd", data); // sends the data to all sockets except itself
 	io.sockets.emit("messageChatling", data); // includes the client that sent the message 
@@ -248,7 +248,7 @@ function newConnection(socket, name) {
 	dealer.getValue();
 	socket.emit("dealer", dealer);
 	io.sockets.emit("turn", {name: arr[turn][1].name, index: arr[turn][1].index});
-	io.sockets.emit("online", arr);
+	// io.sockets.emit("online", arr);
 }
 
 function lostConnection(socket) {
@@ -321,7 +321,14 @@ function endGame() {
 	dealer.getValue();
 	io.sockets.emit("dealer", dealer);
 	io.sockets.emit("players", Array.from(players));
-	io.sockets.emit("turn", {name: arr[turn][1].name, index: arr[turn][1].index});
+	if (arr.length > 0)
+		io.sockets.emit("turn", {name: arr[turn][1].name, index: arr[turn][1].index});
+}
+
+function message(data, socket){
+	console.log(data);
+	socket.broadcast.emit("message", data);
+	// io.sockets.emit("message", data)
 }
 
 io.sockets.on("connection", (socket) => {
@@ -332,15 +339,17 @@ io.sockets.on("connection", (socket) => {
 	socket.on("hit", () => hit(socket));
 	
 	socket.on("stand", () => stand(socket));
-	
+		
+	socket.on("message", (data) => message(data, socket));
+
 	
 	//chatling
-	socket.on("messageChatling", message); 
+	socket.on("messageChatling", messageChatling); 
 	io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
 	
 	socket.on("disconnect", () => {
 		lostConnection(socket);
 		io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
-		io.sockets.emit("online", Array.from(players));
+		// io.sockets.emit("online", Array.from(players));
 	});
 });
