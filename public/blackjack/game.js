@@ -162,7 +162,7 @@ function getImage(card) {
 	if (card == 0) {
 		let node = document.createElement("div");
 		node.setAttribute("class", "card");
-		node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(/back.png); background-size: ${width}px ${height}px;`);
+		node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(back.png); background-size: ${width}px ${height}px;`);
 		return node;
 	}
 	let xBorder = 2;
@@ -192,7 +192,7 @@ function getImage(card) {
 	xOffSet -= xBorder;
 	let node = document.createElement("div");
 	node.setAttribute("class", "card");
-	node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(/cards.png) ${xOffSet}px ${yOffSet}px;`);
+	node.setAttribute("style", `width: ${width}px; height: ${height}px; background: url(cards.png) ${xOffSet}px ${yOffSet}px;`);
 	return node;
 }
 
