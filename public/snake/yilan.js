@@ -138,6 +138,7 @@ function keypress(x){
         lastx=x.keyCode;
         playcount++;
         document.getElementById("playcount").textContent = playcount;
+        document.getElementById("score").textContent = score;
     }
     if(x.keyCode==37 && lastx!=39 && lastx!=37 && cokmantikli==true){
         xv-=30;
