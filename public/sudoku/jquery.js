@@ -5,7 +5,7 @@ let hints = 40;
 
 $(() => {
 
-	start(window.location.search);
+	start(window.location.search.substring(1));
 	
 	$("td").click(function() {
 		let v = prompt();
@@ -25,18 +25,23 @@ $(() => {
 		printBoard(input_board);
 		if (finished(input_board)) {
 			alert("congrats peasant");
+			removeLocalStorage();
+		} else {
+			updateLocalStorage();
 		}
 	});
 
 	$("#hint").click(function() {
 		hint(1, true);
 		printBoard(input_board);
+		updateLocalStorage();
 	});
 
 	$("#solve").click(function() {
 		solve(input_board, 0, 0);
 		console.log(legit(input_board));
 		printBoard(input_board);
+		removeLocalStorage();
 	});
 
 	let slider = document.getElementById("range");
@@ -47,12 +52,14 @@ $(() => {
 
 	$("#generate").click(() => {
 		hints = slider.value;
+		removeLocalStorage();
 		start(null);
 	});
 	
 	$("#import").click(() => {
 		let board = $("#board").val();
-		if (board.length === 81 && !isNaN(board)) start("?" + board);
+		removeLocalStorage();
+		if (board.length === 81 && !isNaN(board)) start(board);
 	});
 	
 	$("#export").click(() => {
@@ -101,7 +108,11 @@ function start(param) {
 	$("td").removeClass();
 	input_board = [];
 	answer_board = [];
-	if (param === null || param.length !== 82 || isNaN(param.substring(1))) {
+	if (param === null || param.length !== 81 || isNaN(param)) {
+		if (localStorage.getItem("board") !== null) {
+			start(localStorage.getItem("board"));
+			return;
+		}
 		initializeBoard(input_board);
 		initializeBoard(answer_board);
 		let h = hints;
@@ -122,11 +133,20 @@ function start(param) {
 			if (c != 1) start(param);
 		}
 	} else {
-		input_board = toSudokuBoard(param.substring(1));
+		input_board = toSudokuBoard(param);
 	}
 
 	for (let i = 0; i < $("td").length; i++) {
 		$("td")[i].innerText = "";
 	}
 	printBoard(input_board);
+	updateLocalStorage();
+}
+
+function updateLocalStorage() {
+	localStorage.setItem("board", toSudokuString(input_board));
+}
+
+function removeLocalStorage() {
+	localStorage.removeItem("board");
 }
