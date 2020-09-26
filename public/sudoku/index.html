@@ -22,9 +22,10 @@
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 45px;
 		}
-		button {
+		button, #mobilepopup {
 			margin-top: 8px;
 			float: left;
+			font-size: 13.29px;
 		}
 		body {
 			float: left;
@@ -69,11 +70,29 @@
 		}
 		#range {
 			margin-top: 8px;
+			margin-left: 0;
 		}
 		p {
 			font-family: Arial, Helvetica, sans-serif;
 			font-size: 13.3333px;
 			margin: 8px;
+		}
+		#info {
+			font: 30px Verdana;
+		}
+		#mobilepopup {
+			width: 30px;
+			height: 18px;
+		}
+		@media (max-width: 769px) {
+			#info {
+				display: none;
+			}
+		}
+		@media (min-width: 769px) {
+			#mobilepopup {
+				display: none;
+			}
 		}
 	</style>
 	<script src="../jquery-3.5.1.js"></script>
@@ -81,7 +100,7 @@
 	<script src="sudoku.js"></script>
 </head>
 <body>
-	<div>
+	<div style="background-color: #ffffff;">
 		<tr>
 			<table>
 				<tr>
@@ -243,14 +262,57 @@
 		</tr>
 	</div>
 	<input type="range" min="0" max="81" value="40" class="slider" id="range"><br>
-	<input id="board" style="width: 99%; margin-top: 8px" type="text" placeholder="81*[0-9]"><br>
+	<input id="board" style="width: -webkit-fill-available; margin-top: 8px" type="text" placeholder="81*[0-9]"><br>
 	<button id="generate" type="button">GENERATE WITH <span id="hints"></span> HINTS</button>
 	<button id="hint" type="button">TAKE HINT</button>
 	<button id="import" type="button">IMPORT</button>
 	<button id="export" type="button">EXPORT</button>
 	<button id="url" type="button">URL</button>
 	<button id="solve" type="button">SOLVE</button>
-	<a target="_self" href="./solver"><button type="button">SOLVER</button></a><br>
+	<a target="_self" href="./solver"><button type="button">SOLVER</button></a>
+	<input type="color" id="mobilepopup" value="#ffffff">
+	<br>
+	<h2 id="info">Right click to change the background.</h2>
+	<script>
+		let background_color = "#ffffff";
+		if (screen.width >=  768) {
+			document.querySelector("html").addEventListener("contextmenu", (e) => {
+				if (e.target.id == "board") {
+					e.defaultPrevented = false;
+					return;
+				}
+				e.preventDefault();
+				if (document.getElementById("popup")) {
+					document.getElementById("popup").remove();
+				}
+				let x = e.x;
+				let y = e.y;
+				let popup = document.createElement("input");
+				popup.setAttribute("id", "popup");
+				popup.setAttribute("type", "color");
+				popup.setAttribute("style", `position: absolute;
+											top: ${y - 1}px;
+											left: ${x}px;
+											height: 0; 
+											width: 0; 
+											margin: 0; 
+											padding: 0;`);
+				popup.setAttribute("value", background_color);
+				popup.addEventListener("input", (e) => {
+					background_color = e.target.value;
+					document.querySelector("html").setAttribute("style", `background-color: ${background_color};`);
+				});
+				document.querySelector("body").appendChild(popup);
+				document.getElementById("popup").focus();
+				popup.style.display = "contents";
+				document.getElementById("popup").click();
+			});
+		}
+		document.getElementById("mobilepopup").addEventListener("change", (e) => {
+			background_color = e.target.value;
+			document.querySelector("html").setAttribute("style", `background-color: ${background_color};`);
+		});
+	</script>
 </div>
 </body>
 </html>

@@ -5,13 +5,14 @@ let hints = 40;
 
 $(() => {
 
+	$("#info").fadeOut(8000);
 	start(window.location.search.substring(1));
 	
 	$("td").click(function() {
-		let v = prompt();
 		if ($(this).attr("class") == "org") 
 			return;
-		else if (isNaN(parseInt(v))) {
+		let v = prompt();
+		if (isNaN(parseInt(v))) {
 			$(this).text("");
 			return;
 		}
@@ -62,12 +63,23 @@ $(() => {
 		if (board.length === 81 && !isNaN(board)) start(board);
 	});
 	
+	const copyToClipboard = () => {
+		let board = document.getElementById("board");
+		if (board.value == "") return;
+		board.select();
+		board.setSelectionRange(0, 99999);
+		document.execCommand("copy");
+		alert("Copied");
+	}
+	
 	$("#export").click(() => {
 		$("#board").val(toSudokuString(input_board));
+		copyToClipboard();
 	});
 	
 	$("#url").click(() => {
 		$("#board").val(window.location.origin + window.location.pathname + "?" + toSudokuString(input_board));
+		copyToClipboard();
 	});
 	
 });
