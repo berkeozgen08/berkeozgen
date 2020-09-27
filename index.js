@@ -78,6 +78,24 @@ app.get("/snake/db", (req, res, next) => {
 		})
 });
 
+app.get("/snake/names", (req, res, next) => {
+	snake.find()
+		.catch(() => {
+			res.sendStatus(500);
+			next();
+		})
+		.then((data) => {
+			let names = [];
+			for (let i of data) { 
+				if (!names.includes(i.name)) {
+					names.push(i.name);
+				}
+			}
+			let length = names.length;
+			res.json({names, length});
+		})
+});
+
 let socket = require("socket.io");
 let io = socket(server);
 
