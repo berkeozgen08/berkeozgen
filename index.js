@@ -3,7 +3,7 @@ let app = express();
 
 require("dotenv").config();
 let db = require("monk")(process.env.MONGO);
-let snake = db.get("snake");
+let snake = db.get("snake");snake.remove({});
 
 let port =  process.env.PORT || 3000;
 let server = app.listen(port, () => {
@@ -16,7 +16,7 @@ app.use(express.json({limit: "1kb"}));
 app.post("/snake/api", (req, res, next) => {
 	let data = req.body;
 
-	let time = Date(Date.now()).toString();
+	let time = Date.now();
 	data.time = time;
 	
 	snake.insert(data).catch(() => {
