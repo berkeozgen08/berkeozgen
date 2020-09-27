@@ -36,6 +36,7 @@ app.get("/snake/api", (req, res, next) => {
 		.then((data) => {
 			for(i of data) {
 				delete i.time;
+				delete i._id;
 			}
 			
 			data.sort((a, b) => {
@@ -57,6 +58,25 @@ app.get("/snake/api", (req, res, next) => {
 		});
 });
 
+app.get("/snake/db", (req, res, next) => {
+	snake.find()
+		.catch(() => {
+			res.sendStatus(500);
+			next();
+		})
+		.then((data) => {
+			data.sort((a, b) => {
+				return b.time - a.time;
+			});
+
+			for(i of data) {
+				delete i._id;
+				i.time = new Date(i.time).toString();
+			}
+			
+			res.json(data);
+		})
+});
 
 let socket = require("socket.io");
 let io = socket(server);
