@@ -34,61 +34,12 @@
         position: absolute;
         border-radius: 5px;
     }
-    /* #i{
-        position: absolute;
-        margin-left: 8px;
-        width: calc(50% - 316px);
-        height: 472px;
-        top: 136px;
-        left: calc(50% + 300px);
-        border-radius: 5px;
-    } */
     </style>
 	<script src="/p5.js"></script>
 </head>
 <body>
 	<script>
 		document.body.style = 'background: #A0A0A0;';
-
-		let proxyUrl = 'https://cors-anywhere.herokuapp.com/';
-		function loginData(){
-			let targetUrl = 'http://berkeozgen.azurewebsites.net/snake/login';
-			let data = {name};
-			let options = {
-				method: "POST",
-				headers: {
-					"Content-Type": "application/json",
-					"Origin": "null"
-				},
-				body: JSON.stringify(data)
-			}
-			fetch(proxyUrl + targetUrl, options);
-		}
-
-		// let ip;
-
-		// let blocked = [];
-
-		// function untilcolon(x){
-		// 	let str = x;
-		// 	for(let i = 0; i < str.length; i++){
-		// 		if(str.substring(str.length-i-1, str.length-i) == ":"){
-		// 			return str.substring(0, str.length-i-1);
-		// 		}
-		// 	}
-		// }
-
-		// async function getIP(){
-		// 	let response = await fetch("/login");
-		// 	ip = await response.json();
-		// 	for(let i = 0; i < blocked.length; i++){
-		// 		if(untilcolon(ip) == blocked[i]){
-		// 			document.write("<h1 style=\"font-size: 25vh;\">FUCK OFF</h1>");
-		// 			window.stop();
-		// 		}
-		// 	}
-		// }
-		// getIP();
 
 		let name;
 
@@ -100,37 +51,31 @@
 				getName();
 			}
 			else{
-				loginData();
 				name = name.substring(0,3).toUpperCase();
 			}
 		}
 
-		async function sendData(){// async, await and promises watch from daniel shiffman's Promises playlist
-			let targetUrl = 'http://berkeozgen.azurewebsites.net/snake/api';
-			let data = {name, score};
-			let options = {
-				method: "POST",// since we are posting a request
+		async function sendData(){
+			let res = await fetch("/snake/api", {
+				method: "POST",
 				headers: {
-					"Content-Type": "application/json",// we are sending a json
-					"Origin": "null"
+					"Content-Type": "application/json"
 				},
-				body: JSON.stringify(data)// this is what we are sending
-			}
-			let response = await fetch(proxyUrl + targetUrl, options);// send JSON.stringify(data) and receive a response
-			let send = await response.json();// assign the json value of response to data
-			getData();
+				body: JSON.stringify({name, score})
+			});
+
+			let send = await res.json().then(() => {
+				getData();
+			});
 		}
-		// same as fetch("/api", options).then((response) => console.log(response)); but we did this because we need to specify our response is a json
-		// ohoo
 
 		getName();
 
 		let dataArray = [];
 
 		async function getData(){
-			let targetUrl = "http://berkeozgen.azurewebsites.net/snake/api"
-			let response = await fetch(proxyUrl + targetUrl, {method: "GET", headers: {"Origin": "null"}});// no options because default method is "GET" already
-			dataArray = await response.json();
+			let res = await fetch("/snake/api");
+			dataArray = await res.json();
 
 			let x = dataArray.length;
 			if(dataArray.length > 9){
@@ -164,7 +109,6 @@
 		</div>
 	</div>
     <a href="rickroll.html" target="_blank"><img id="ad" src="ad.jpg" alt="Özel ders saati 15TL" longdesc="Lütfen tıklayın karnım aç yalvarıyorum"></a>
-    <!-- <iframe id="i" src="https://open.spotify.com/embed/playlist/6TjyfYv2nzCt2hDV0Kb83B" frameborder="0" allowtransparency="true" allow="encrypted-media"></iframe> -->
-    <script src="yilan.js"></script>
+	<script src="yilan.js"></script>
 </body>
 </html>

@@ -1,96 +1,70 @@
-let express = require("express");// npm install express
+let express = require("express");
 let app = express();
-let Datastore = require("nedb");// npm install nedb
 
-let database = new Datastore("database.db");// make a new database with the name "database.db"
-database.loadDatabase();// load the database
-
-let database1 = new Datastore("database1.db");
-database1.loadDatabase();
+require("dotenv").config();
+let db = require("monk")(process.env.MONGO);
+let snake = db.get("snake");
 
 let port =  process.env.PORT || 3000;
-let server = app.listen(port, function(){// initalize the server at localhost:3000
+let server = app.listen(port, () => {
 	console.log("listening at " + port);
 });
 
-app.use(express.static("public"));// for client site files
-app.use(express.json({limit: "1mb"}));// for sending json with fetch()
+app.use(express.static("public"));
+app.use(express.json({limit: "1kb"}));
 
-// let ip;
-app.post("/snake/api", (request, response) => {
-	// ip = request.headers['x-forwarded-for'] ||
-	// 		 request.connection.remoteAddress ||
-	// 		 request.socket.remoteAddress ||
-	// 		 (request.connection.socket ? request.connection.socket.remoteAddress : null);
-	let data = request.body;
-	// data.ip = ip;
-	let time = Date(Date.now()).toString();// Date.now() gives miliseconds passed till 1970, Date gives the current date, toString well i think u know
-	data.time = time;// add a time parameter to the date object
-	database.insert(data);// add data to the database
-	console.log(data);
-	response.json(data);// response.send() would be more general && check index.html for fetching the response .then() (promises sth)
-});
+app.post("/snake/api", (req, res, next) => {
+	let data = req.body;
 
-app.post("/snake/login", (request, response) => {
-	// ip = request.headers['x-forwarded-for'] ||
-	// 		 request.connection.remoteAddress ||
-	// 		 request.socket.remoteAddress ||
-	// 		 (request.connection.socket ? request.connection.socket.remoteAddress : null);
-	let data = request.body;
-	// data.ip = ip;
 	let time = Date(Date.now()).toString();
 	data.time = time;
-	database1.insert(data);
-	console.log(data);
-	response.json(data);
-});
-
-app.get("/snake/api", (request, response) => {
-	database.find({}, (err, data) => {
-		if(err){
-			response.end();
-			console.log("Ran into an error");
-			return;
-		}
-
-		for(i of data) {
-			// delete i.ip;
-			delete i.time;
-		}
-
-		data.sort(function(a, b){return b.score-a.score});
-
-		let x = data.length;
-		if(data.length > 9){
-			x = 9;
-		}
-
-		temp = [];
-
-		for(let i = 0; i < x; i++) {
-			temp[i] = data[i];
-		}
-
-		response.json(temp);
+	
+	snake.insert(data).catch(() => {
+		res.sendStatus(500);
+		next();
 	});
+
+	res.json(data);
 });
 
-app.get("/snake/login", (request, response) => {
-	// response.json(ip);
+app.get("/snake/api", (req, res, next) => {
+	snake.find()
+		.catch(() => {
+			res.sendStatus(500);
+			next();
+		})
+		.then((data) => {
+			for(i of data) {
+				delete i.time;
+			}
+			
+			data.sort((a, b) => {
+				return b.score - a.score;
+			});
+
+			let x = data.length;
+			if(data.length > 9){
+				x = 9;
+			}
+
+			temp = [];
+
+			for(let i = 0; i < x; i++) {
+				temp[i] = data[i];
+			}
+
+			res.json(temp);
+		});
 });
 
 
 let socket = require("socket.io");
-
-let io = socket(server); // input and output on server
+let io = socket(server);
 
 function messageChatling(data){
 	console.log(data);
-	// socket.broadcast.emit("asd", data); // sends the data to all sockets except itself
-	io.sockets.emit("messageChatling", data); // includes the client that sent the message 
+	io.sockets.emit("messageChatling", data);
 }
-
-
 
 let players = new Map();
 let turn = 0;
@@ -248,7 +222,6 @@ function newConnection(socket, name) {
 	dealer.getValue();
 	socket.emit("dealer", dealer);
 	io.sockets.emit("turn", {name: arr[turn][1].name, index: arr[turn][1].index});
-	// io.sockets.emit("online", arr);
 }
 
 function lostConnection(socket) {
@@ -328,7 +301,6 @@ function endGame() {
 function message(data, socket){
 	console.log(data);
 	socket.broadcast.emit("message", data);
-	// io.sockets.emit("message", data)
 }
 
 io.sockets.on("connection", (socket) => {
@@ -342,14 +314,12 @@ io.sockets.on("connection", (socket) => {
 		
 	socket.on("message", (data) => message(data, socket));
 
-	
-	//chatling
+
 	socket.on("messageChatling", messageChatling); 
 	io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
 	
 	socket.on("disconnect", () => {
 		lostConnection(socket);
 		io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
-		// io.sockets.emit("online", Array.from(players));
 	});
 });
