@@ -3,7 +3,7 @@ let app = express();
 
 require("dotenv").config();
 let db = require("monk")(process.env.MONGO);
-let snake = db.get("snake");snake.remove({});
+let snake = db.get("snake");
 
 let port =  process.env.PORT || 3000;
 let server = app.listen(port, () => {
