@@ -28,6 +28,7 @@ function updateMessages(data) {
 	}
 	$(".message-bubble").last().children().first().text(data);
 	count++;
+	$(".panel-body")[0].scrollTo(0, $(".panel-body")[0].scrollHeight);
 }
 
 $(() => {

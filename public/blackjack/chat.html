@@ -17,10 +17,11 @@
 
 		p {
 			margin-bottom: 0px;
-			height: 47px;
+			min-height: 51px;
 			display: flex;
-			justify-content: center;
 			align-items: center;
+    		overflow: hidden;
+			overflow-wrap: anywhere;
 		}
 
 		.message-bubble:nth-child(even) {
@@ -37,6 +38,7 @@
 			display: block;
 			height: 265px;
 			overflow: scroll;
+			overflow-x: hidden;
 		}
 		.cont {
 			min-width: fit-content;
