@@ -4,6 +4,7 @@ let app = express();
 require("dotenv").config();
 let db = require("monk")(process.env.MONGO);
 let snake = db.get("snake");
+let chatling = db.get("chatling");
 
 let port =  process.env.PORT || 3000;
 let server = app.listen(port, () => {
@@ -98,11 +99,6 @@ app.get("/snake/names", (req, res, next) => {
 
 let socket = require("socket.io");
 let io = socket(server);
-
-function messageChatling(data){
-	console.log(data);
-	io.sockets.emit("messageChatling", data);
-}
 
 let players = new Map();
 let turn = 0;
@@ -341,6 +337,11 @@ function message(data, socket){
 	socket.broadcast.emit("message", data);
 }
 
+function messageChatling(data){
+	chatling.insert(data);
+	io.sockets.emit("messageChatling", [data]);
+}
+
 io.sockets.on("connection", (socket) => {
 	console.log("new connection: " + socket.id);
 	
@@ -355,6 +356,15 @@ io.sockets.on("connection", (socket) => {
 
 	socket.on("messageChatling", messageChatling); 
 	io.sockets.emit("onlineChatling", Object.keys(io.sockets.sockets).length);
+
+	chatling.find()
+		.catch(() => {
+			res.sendStatus(500);
+			next();
+		})
+		.then((data) => {
+			socket.emit("messageChatling", data);
+		});
 	
 	socket.on("disconnect", () => {
 		lostConnection(socket);
