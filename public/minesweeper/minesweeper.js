@@ -28,7 +28,7 @@ $(() => {
 			$(this).css("background-color", "rgb(184, 184, 184)");
 			copy();
 			print();
-			checkFinished();
+			// checkFinished();
 		}
 
 	});
