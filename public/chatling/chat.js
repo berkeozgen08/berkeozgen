@@ -1,10 +1,12 @@
-let socket = io.connect("/");
+let socket = io.connect("/chatling", {
+	"transports": ['websocket']
+ });
 
 $(".btn-default").click(() => {
-	let msg = $(".form-control")[0].value;
+	let msg = $(".form-control")[0].value.trim();
 	if (msg == "") return;
 	$(".form-control")[0].value = "";
-	socket.emit("messageChatling", {message: msg, time: Date.now()});
+	socket.emit("message", {message: msg, time: Date.now()});
 });
 
 $(".form-control").keypress((e) => {
@@ -19,12 +21,11 @@ if (window.height <= 768) {
 	});
 }
 
-socket.on("messageChatling", (data) => {
+socket.on("message", (data) => {
 	updateMessages(data);
 });
 
 function updateMessages(data) {
-	console.log(data);
 	for (let i of data) {
 		$(".container").append("<div class=\"row message-bubble border\"><p>‎</p></div>");
 		$(".message-bubble").last().children().first().text(`${new Date(i.time).toLocaleString()} - ${i.message}`);
@@ -32,6 +33,6 @@ function updateMessages(data) {
 	$(".panel-body")[0].scrollTo(0, $(".panel-body")[0].scrollHeight);
 }
 
-socket.on("onlineChatling", (data) => {
+socket.on("online", (data) => {
 	$("#online").text(data);
 });
