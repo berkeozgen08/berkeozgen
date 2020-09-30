@@ -274,7 +274,8 @@
 	<br>
 	<h2 id="info">Right click to change the background.</h2>
 	<script>
-		let background_color = "#ffffff";
+		let background_color = localStorage.getItem("background_color") || "#ffffff";
+		document.querySelector("html").setAttribute("style", `background-color: ${background_color};`);
 		if (screen.width >=  768) {
 			document.querySelector("html").addEventListener("contextmenu", (e) => {
 				if (e.target.id == "board") {
@@ -302,6 +303,9 @@
 					background_color = e.target.value;
 					document.querySelector("html").setAttribute("style", `background-color: ${background_color};`);
 				});
+				popup.addEventListener("change", (e) => {
+					localStorage.setItem("background_color", e.target.value);
+				});
 				document.querySelector("body").appendChild(popup);
 				document.getElementById("popup").focus();
 				popup.style.display = "contents";
@@ -310,6 +314,7 @@
 		}
 		document.getElementById("mobilepopup").addEventListener("change", (e) => {
 			background_color = e.target.value;
+			localStorage.setItem("background_color", background_color);
 			document.querySelector("html").setAttribute("style", `background-color: ${background_color};`);
 		});
 	</script>
