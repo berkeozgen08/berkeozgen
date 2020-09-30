@@ -2,12 +2,14 @@ const express = require("express");
 const monk = require("monk");
 const socket = require("socket.io");
 const path = require("path");
+const favicon = require("serve-favicon");
 require("dotenv").config();
 
 const app = express();
 
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({limit: "1kb"}));
+app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 const port =  process.env.PORT || 3000;
 const server = app.listen(port, () => {
@@ -20,9 +22,14 @@ const chatlingDB = db.get("chatling");
 
 const io = socket(server);
 
-const blackjack = require(path.join(__dirname, "apps/blackjack.js"))(io);
-const chatling = require(path.join(__dirname, "apps/chatling.js"))(io, chatlingDB);
-const snake = require(path.join(__dirname, "apps/snake.js"))(app, snakeDB);
+const blackjack = require(path.join(__dirname, "apps", "blackjack.js"))(io);
+const chatling = require(path.join(__dirname, "apps", "chatling.js"))(io, chatlingDB);
+const snake = require(path.join(__dirname, "apps", "snake.js"))(app, snakeDB);
+
+const notFound = path.join(__dirname, "public/404.html");
+app.use((req, res, next) => {
+	res.status(404).sendFile(notFound);
+});
 
 app.use((err, req, res, next) => {
 	if (err.status) {
