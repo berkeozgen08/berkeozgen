@@ -1,0 +1,108 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Not Found</title>
+	<style>
+		body {
+			background-color: #343a40;
+			color: white;
+			margin: 0;
+			font-family: sans-serif;
+			font-size: 1rem;
+			font-weight: 400;
+			min-height: 100vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+		}
+		.container {
+			background-color: #3d6da7;
+			border-radius: 20px;
+			padding: 8px;
+			text-align: center;
+    		max-width: min-content;
+		}
+		.container * {
+			margin: 16px;
+		}
+		.header {
+			display: flex;
+			justify-content: center;
+			align-content: center;
+		}
+		.main {
+			color: #e6e6e6;
+			line-height: 1.5;
+		}
+		.fof {
+			font-size: 15vw;
+			margin: 0;
+		}
+		.rotating {
+			height: 12vw;
+			margin: auto;
+		}
+		.rotating:first-of-type {
+			animation: rotation 3s infinite linear;
+		}
+		.desc {
+			margin: 0;
+			font-weight: normal;
+		}
+		@keyframes rotation {
+			from {
+				transform: rotate(0deg);
+			}
+			to {
+				transform: rotate(-359deg);
+			}
+		}
+		@media (max-width: 768px) {
+			body {
+				min-height: 90vh;
+			}
+			.container {
+				max-width: 90vw;
+			}
+			.fof {
+				font-size: 40vw;
+			}
+			.rotating {
+				height: 32vw;
+			}
+		}
+		button {
+			color: #e6e6e6;
+			background-color: #3d6da7;
+			border: none;
+			border-radius: 5px;
+			font-size: 20px;
+			margin-top: 16px;
+			padding: 8px;
+			cursor: pointer;
+		}
+	</style>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<h1 class="fof">4</h1>
+			<img class="rotating" src="/images/favicon.png">
+			<h1 class="fof">4</h1>
+		</div>
+		<div class="main">
+			<h4 class="desc">
+				The site you are looking for is nowhere to be found.
+				It is either that you entered a wrong url, or I was
+				just to lazy to create this page. Most likely the latter.
+			</h4>
+		</div>
+	</div>
+	<div class="button">
+		<a href="/index.html"><button type="button">Don't Get Lost Again</button></a>
+	</div>
+</body>
+</html>
