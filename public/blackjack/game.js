@@ -1,9 +1,15 @@
 const socket = io.connect("/blackjack", {
 	"transports": ['websocket']
- });
+});
 
-let name = prompt("Enter your name") || "no name";
-socket.emit("name", name);
+let name;
+
+function join() {
+	name = document.getElementById("name").value || "no name";
+	socket.emit("name", name);
+	$("#login").hide();
+	$("#game").show();
+}
 
 function sendMessage(msg) {
 	socket.emit("message", name + ": " + msg);
@@ -24,7 +30,7 @@ socket.on("message", (data) => {
 });
 
 socket.on("self", (player) => {
-	document.getElementById("name").innerText = player.name;
+	document.getElementById("youare").innerText = player.name;
 });
 
 let slided = true;
@@ -35,15 +41,6 @@ let timer = setInterval(() => {
 		stand();
 	}
 }, 1000);
-
-// socket.on("online", (players) => {
-// 	let str = "";
-// 	for (let i of players) {
-// 		str += i[1].name + ", ";
-// 	}
-// 	if (players.length == 0) str = "0";
-// 	document.getElementById("online").innerText = str.substring(0, str.length > 2 ? str.length - 2 : str.length);
-// });
 
 socket.on("dealer", (dealer) => {
 	let node = document.getElementById("dealer");
@@ -88,7 +85,6 @@ socket.on("players", (players) => {
 
 		let name = document.createElement("h3");
 		name.innerText = players[i][1].name + ` (${scores.get(players[i][1].name)})`;
-		// name.innerText = players[i][1].name;
 		name.setAttribute("class", "name");
 		foo.appendChild(name);
 
@@ -197,7 +193,12 @@ function getImage(card) {
 }
 
 $(() => {
-	// $("#notf").hide();
+	$("#name").focus();
+	$("#name").keypress((e) => {
+		if ((e.which && e.which == 13) || (e.keyCode && e.keyCode == 13)) {
+			join();
+		}
+	});
 	document.getElementById("message").volume = 0.1;
 	$("#chatslider").click(() => {
 		if (slided) {

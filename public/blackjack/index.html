@@ -97,6 +97,45 @@
 			background-color: orange;
 			right: 0;
 		}
+		#game {
+			display: none;
+		}
+		#login {
+			margin: 0;
+			min-height: 95vh;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+		}
+		.container {
+			padding: 32px;
+			display: flex;
+			justify-content: center;
+			align-items: center;
+			flex-direction: column;
+			background-color: #ffffffa9;
+			color: black;
+			border-radius: 15px;
+		}
+		.container * {
+			margin: 0 0 24px 0;
+			box-sizing: border-box;
+			font-weight: normal;
+		}
+		#blackjack {
+			font-size: 5vw;
+		}
+		#name {
+			width: 100%;
+			height: 40px;
+			font-size: 1rem;
+    		outline: none;
+		}
+		#join {
+			width: 100%;
+			margin-bottom: 0;
+			cursor: pointer;
+		}
 		@media (max-width: 769px) {
 			#frame {
 				left: 0;
@@ -113,30 +152,41 @@
 			div > p {
 				margin-right: 0;
 			}
+			#blackjack {
+				font-size: 15vw;
+			}
 		}
 	</style>
 </head>
 <body>
-	<!-- <h1>Online: <span id="online"></span></h1> -->
-	<audio id="message">
-		<source src="message.mp3">
-	</audio>
-	<main>
-		<div id="dealer"></div>
-		<div id="players"></div>
-		<button type="button" onclick=hit() style="margin-right: 0">Hit</button>
-		<button type="button" onclick=stand() style="margin: 0">Stand</button>
-		<p>Time left: <span id="time">25</span></p>
-		<p>Turn: <span id="turn"></span></p>
-		<p style="margin-bottom: 40px;">You are: <span id="name"></span></p>
-	</main>
-	<div id="frame" show="no">
-		<div id="chatslider">
-			<h3>Chat</h3>
-			<h3 id="notf" style="display: none"></h3>
+	<div id="login">
+		<div class="container">
+			<h1 id="blackjack">Blackjack</h1>
+			<input type="text" id="name" placeholder="Enter your name" autocomplete="off">
+			<button type="button" onclick=join() id="join">Join</button>
 		</div>
-		<div id="slide">
-			<iframe src="chat.html" scrolling="no" id="chatling"></iframe>
+	</div>
+	<div id="game">
+		<audio id="message">
+			<source src="message.mp3">
+		</audio>
+		<main>
+			<div id="dealer"></div>
+			<div id="players"></div>
+			<button type="button" onclick=hit() style="margin-right: 0">Hit</button>
+			<button type="button" onclick=stand() style="margin: 0">Stand</button>
+			<p>Time left: <span id="time">25</span></p>
+			<p>Turn: <span id="turn"></span></p>
+			<p style="margin-bottom: 40px;">You are: <span id="youare"></span></p>
+		</main>
+		<div id="frame" show="no">
+			<div id="chatslider">
+				<h3>Chat</h3>
+				<h3 id="notf" style="display: none"></h3>
+			</div>
+			<div id="slide">
+				<iframe src="chat.html" scrolling="no" id="chatling"></iframe>
+			</div>
 		</div>
 	</div>
 </body>
