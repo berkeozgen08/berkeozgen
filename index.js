@@ -3,12 +3,14 @@ const monk = require("monk");
 const socket = require("socket.io");
 const path = require("path");
 const favicon = require("serve-favicon");
-const helmet = require("helmet");
+const hsts = require("hsts");
 require("dotenv").config();
 
 const app = express();
 
-app.use(helmet.hsts());
+app.use(hsts({
+    preload: true
+}));
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({limit: "1kb"}));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
