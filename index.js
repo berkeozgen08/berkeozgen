@@ -8,9 +8,7 @@ require("dotenv").config();
 
 const app = express();
 
-app.use(hsts({
-    preload: true
-}));
+app.use(hsts());
 app.use(express.static(path.join(__dirname, "public")));
 app.use(express.json({limit: "1kb"}));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
