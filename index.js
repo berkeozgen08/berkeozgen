@@ -21,6 +21,7 @@ const server = app.listen(port, () => {
 const db = monk(process.env.MONGO);
 const snakeDB = db.get("snake");
 const chatlingDB = db.get("chatling");
+const urlDB = db.get("url");
 
 const io = socket(server);
 
@@ -28,7 +29,7 @@ const blackjack = require(path.join(__dirname, "apps", "blackjack.js"))(io);
 const chatling = require(path.join(__dirname, "apps", "chatling.js"))(io, chatlingDB);
 const snake = require(path.join(__dirname, "apps", "snake.js"))(app, snakeDB);
 
-const notFound = path.join(__dirname, "public/404.html");
+const notFound = path.join(__dirname, "public", "404.html");
 app.use((req, res, next) => {
 	res.status(404).sendFile(notFound);
 });
