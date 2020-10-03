@@ -6,7 +6,7 @@ module.exports = (app, urlDB) => {
 
 	let urlRegEx = /^(https?:\/\/)?((([a-z\d]([a-z\d-]*[a-z\d])*)\.)+[a-z]{2,}|((\d{1,3}\.){3}\d{1,3}))(\:\d+)?(\/[-a-z\d%_.~+]*)*(\?[;&a-z\d%_.~+=-]*)?(\#[-a-z\d_]*)?$/i;
 	const schema = yup.object().shape({
-		slug: yup.string().trim().matches(/^[\w\-]+$/i, "Only lowercase letters and dashes."),
+		slug: yup.string().trim().matches(/^[\w\-]+$/i, "Only lowercase letters, numbers, dashes and underscores."),
 		url: yup.string().trim().matches(urlRegEx, "URL is not valid.").required("URL is required.")
 	});
 	
