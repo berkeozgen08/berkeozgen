@@ -19,6 +19,9 @@ module.exports = (app, urlDB) => {
 		try {
 			let result = await urlDB.findOne({ slug });
 			if (result) {
+				if (!result.url.includes("http")) {
+					result.url = "https://" + result.url;
+				}
 				res.redirect(result.url);
 			} else {
 				res.status(404).sendFile(notFound);
