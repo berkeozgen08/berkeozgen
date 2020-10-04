@@ -62,7 +62,7 @@ module.exports = (app, urlDB) => {
 				time: Date.now()
 			});
 			res.json({
-				message: `https://berkeozgen.me/u/${slug}`
+				message: `berkeozgen.me/u/${slug}`
 			});
 		} catch (err) {
 			next(err);
