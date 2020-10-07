@@ -35,7 +35,7 @@ module.exports = (app, urlDB) => {
 
 	app.post("/u", rateLimit({
 		windowMs: rate * 1000,
-		max: 3,
+		max: 2,
 		message: {message: `Slow down buddy, try again in ${rate} seconds.`}
 	}), async (req, res, next) => {
 		let { slug, url } = req.body;
