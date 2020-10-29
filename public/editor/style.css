@@ -1,0 +1,53 @@
+html {
+	font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
+	font-weight: 350;
+	font-size: 18px;
+}
+body, body > * {
+	margin: 0;
+	background-color: #282c34;
+}
+body {
+	height: 100vh;
+}
+#code {
+	height: calc(100vh - 38px);
+}
+.header {
+	height: 38px;
+}
+.header * {
+	background-color: #586173;
+	color: #d1daeb;
+	font-size: 1rem;
+	box-shadow: 1px 1px 3px #000000;
+	border: none;
+	outline: none;
+	user-select: none;
+	padding: 4px 8px 4px 8px;
+}
+.header *:active {
+	box-shadow: 0 0;
+}
+.header *:hover {
+	background-color: #4b5261;
+}
+.container {
+	height: 100vh;
+}
+select {
+	margin-top: 4px;
+	margin-left: 4px;
+	padding-left: 8px;
+}
+@media (max-width: 768px) {
+	html, * {
+		font-size: 13px;
+	}
+	.header {
+		height: 32px;
+	}
+	#code {
+		height: calc(100vh - 32px);
+	}
+}

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+	<meta charset="UTF-8">
+	<meta name="viewport" content="width=device-width, initial-scale=1.0">
+	<title>Code Editor</title>
+	
+	<link rel="stylesheet" href="style.css">
+	<link rel="stylesheet" href="lib/codemirror.css">
+	<link rel="stylesheet" href="theme/one-dark.css">
+	<link rel="stylesheet" href="addon/dialog/dialog.css">
+	<link rel="stylesheet" href="addon/scroll/simplescrollbars.css">
+	
+	<script src="lib/codemirror.js"></script>
+	<script src="addon/fold/xml-fold.js"></script>
+	<script src="keymap/sublime.js"></script>
+	<script src="mode/meta.js"></script>
+	<script src="addon/edit/closebrackets.js"></script>
+	<script src="addon/edit/closetag.js"></script>
+	<script src="addon/comment/comment.js"></script>
+	<script src="addon/search/searchcursor.js"></script>
+	<script src="addon/dialog/dialog.js"></script>
+	<script src="addon/search/search.js"></script>
+	<script src="addon/selection/active-line.js"></script>
+	<script src="addon/scroll/simplescrollbars.js"></script>
+</head>
+<body>
+	<div class="container">
+		<div class="header">
+			<select name="lang" id="lang">
+				<option value="text/apl" id="apl">APL</option>
+				<option value="application/pgp" id="asciiarmor">PGP</option>
+				<option value="text/x-ttcn-asn" id="asn.1">ASN.1</option>
+				<option value="text/x-asterisk" id="asterisk">Asterisk</option>
+				<option value="text/x-brainfuck" id="brainfuck">Brainfuck</option>
+				<option value="text/x-csrc" id="clike">C</option>
+				<option value="text/x-c++src" id="clike">C++</option>
+				<option value="text/x-cobol" id="cobol">Cobol</option>
+				<option value="text/x-csharp" id="clike">C#</option>
+				<option value="text/x-clojure" id="clojure">Clojure</option>
+				<option value="text/x-clojurescript" id="clojure">ClojureScript</option>
+				<option value="text/x-gss" id="css">Closure Stylesheets (GSS)</option>
+				<option value="text/x-cmake" id="cmake">CMake</option>
+				<option value="application/vnd.coffeescript" id="coffeescript">CoffeeScript</option>
+				<option value="text/x-common-lisp" id="commonlisp">Common Lisp</option>
+				<option value="application/x-cypher-query" id="cypher">Cypher</option>
+				<option value="text/x-cython" id="python">Cython</option>
+				<option value="text/x-crystal" id="crystal">Crystal</option>
+				<option value="text/css" id="css">CSS</option>
+				<option value="text/x-cassandra" id="sql">CQL</option>
+				<option value="text/x-d" id="d">D</option>
+				<option value="application/dart" id="dart">Dart</option>
+				<option value="text/x-diff" id="diff">diff</option>
+				<option value="text/x-django" id="django">Django</option>
+				<option value="text/x-dockerfile" id="dockerfile">Dockerfile</option>
+				<option value="application/xml-dtd" id="dtd">DTD</option>
+				<option value="text/x-dylan" id="dylan">Dylan</option>
+				<option value="text/x-ebnf" id="ebnf">EBNF</option>
+				<option value="text/x-ecl" id="ecl">ECL</option>
+				<option value="application/edn" id="clojure">edn</option>
+				<option value="text/x-eiffel" id="eiffel">Eiffel</option>
+				<option value="text/x-elm" id="elm">Elm</option>
+				<option value="application/x-ejs" id="htmlembedded">Embedded Javascript</option>
+				<option value="application/x-erb" id="htmlembedded">Embedded Ruby</option>
+				<option value="text/x-erlang" id="erlang">Erlang</option>
+				<option value="text/x-esper" id="sql">Esper</option>
+				<option value="text/x-factor" id="factor">Factor</option>
+				<option value="text/x-fcl" id="fcl">FCL</option>
+				<option value="text/x-forth" id="forth">Forth</option>
+				<option value="text/x-fortran" id="fortran">Fortran</option>
+				<option value="text/x-fsharp" id="mllike">F#</option>
+				<option value="text/x-gas" id="gas">Gas</option>
+				<option value="text/x-feature" id="gherkin">Gherkin</option>
+				<option value="text/x-gfm" id="gfm">GitHub Flavored Markdown</option>
+				<option value="text/x-go" id="go">Go</option>
+				<option value="text/x-groovy" id="groovy">Groovy</option>
+				<option value="text/x-haml" id="haml">HAML</option>
+				<option value="text/x-haskell" id="haskell">Haskell</option>
+				<option value="text/x-literate-haskell" id="haskell-literate">Haskell (Literate)</option>
+				<option value="text/x-haxe" id="haxe">Haxe</option>
+				<option value="text/x-hxml" id="haxe">HXML</option>
+				<option value="application/x-aspx" id="htmlembedded">ASP.NET</option>
+				<option value="text/html" id="htmlmixed">HTML</option>
+				<option value="message/http" id="http">HTTP</option>
+				<option value="text/x-idl" id="idl">IDL</option>
+				<option value="text/x-pug" id="pug">Pug</option>
+				<option value="text/x-java" id="clike">Java</option>
+				<option value="application/x-jsp" id="htmlembedded">Java Server Pages</option>
+				<option value="text/javascript" id="javascript">JavaScript</option>
+				<option value="application/json" id="javascript">JSON</option>
+				<option value="application/ld+json" id="javascript">JSON-LD</option>
+				<option value="text/jsx" id="jsx">JSX</option>
+				<option value="text/jinja2" id="jinja2">Jinja2</option>
+				<option value="text/x-julia" id="julia">Julia</option>
+				<option value="text/x-kotlin" id="clike">Kotlin</option>
+				<option value="text/x-less" id="css">LESS</option>
+				<option value="text/x-livescript" id="livescript">LiveScript</option>
+				<option value="text/x-lua" id="lua">Lua</option>
+				<option value="text/x-markdown" id="markdown">Markdown</option>
+				<option value="text/mirc" id="mirc">mIRC</option>
+				<option value="text/x-mariadb" id="sql">MariaDB SQL</option>
+				<option value="text/x-mathematica" id="mathematica">Mathematica</option>
+				<option value="text/x-modelica" id="modelica">Modelica</option>
+				<option value="text/x-mumps" id="mumps">MUMPS</option>
+				<option value="text/x-mssql" id="sql">MS SQL</option>
+				<option value="application/mbox" id="mbox">mbox</option>
+				<option value="text/x-mysql" id="sql">MySQL</option>
+				<option value="text/x-nginx-conf" id="nginx">Nginx</option>
+				<option value="text/x-nsis" id="nsis">NSIS</option>
+				<option value="application/n-triples" id="ntriples">NTriples</option>
+				<option value="text/x-objectivec" id="clike">Objective-C</option>
+				<option value="text/x-objectivec++" id="clike">Objective-C++</option>
+				<option value="text/x-ocaml" id="mllike">OCaml</option>
+				<option value="text/x-octave" id="octave">Octave</option>
+				<option value="text/x-oz" id="oz">Oz</option>
+				<option value="text/x-pascal" id="pascal">Pascal</option>
+				<option value="null" id="pegjs">PEG.js</option>
+				<option value="text/x-perl" id="perl">Perl</option>
+				<option value="text/x-php" id="php">PHP</option>
+				<option value="text/x-pig" id="pig">Pig</option>
+				<option value="text/plain" id="null" selected>Plain Text</option>
+				<option value="text/x-plsql" id="sql">PLSQL</option>
+				<option value="text/x-pgsql" id="sql">PostgreSQL</option>
+				<option value="application/x-powershell" id="powershell">PowerShell</option>
+				<option value="text/x-properties" id="properties">Properties files</option>
+				<option value="text/x-protobuf" id="protobuf">ProtoBuf</option>
+				<option value="text/x-python" id="python">Python</option>
+				<option value="text/x-puppet" id="puppet">Puppet</option>
+				<option value="text/x-q" id="q">Q</option>
+				<option value="text/x-rsrc" id="r">R</option>
+				<option value="text/x-rst" id="rst">reStructuredText</option>
+				<option value="text/x-rpm-changes" id="rpm">RPM Changes</option>
+				<option value="text/x-rpm-spec" id="rpm">RPM Spec</option>
+				<option value="text/x-ruby" id="ruby">Ruby</option>
+				<option value="text/x-rustsrc" id="rust">Rust</option>
+				<option value="text/x-sas" id="sas">SAS</option>
+				<option value="text/x-sass" id="sass">Sass</option>
+				<option value="text/x-scala" id="clike">Scala</option>
+				<option value="text/x-scheme" id="scheme">Scheme</option>
+				<option value="text/x-scss" id="css">SCSS</option>
+				<option value="text/x-sh" id="shell">Shell</option>
+				<option value="application/sieve" id="sieve">Sieve</option>
+				<option value="text/x-slim" id="slim">Slim</option>
+				<option value="text/x-stsrc" id="smalltalk">Smalltalk</option>
+				<option value="text/x-smarty" id="smarty">Smarty</option>
+				<option value="text/x-solr" id="solr">Solr</option>
+				<option value="text/x-sml" id="mllike">SML</option>
+				<option value="text/x-soy" id="soy">Soy</option>
+				<option value="application/sparql-query" id="sparql">SPARQL</option>
+				<option value="text/x-spreadsheet" id="spreadsheet">Spreadsheet</option>
+				<option value="text/x-sql" id="sql">SQL</option>
+				<option value="text/x-sqlite" id="sql">SQLite</option>
+				<option value="text/x-squirrel" id="clike">Squirrel</option>
+				<option value="text/x-styl" id="stylus">Stylus</option>
+				<option value="text/x-swift" id="swift">Swift</option>
+				<option value="text/x-stex" id="stex">sTeX</option>
+				<option value="text/x-latex" id="stex">LaTeX</option>
+				<option value="text/x-systemverilog" id="verilog">SystemVerilog</option>
+				<option value="text/x-tcl" id="tcl">Tcl</option>
+				<option value="text/x-textile" id="textile">Textile</option>
+				<option value="text/x-tiddlywiki" id="tiddlywiki">TiddlyWiki</option>
+				<option value="text/tiki" id="tiki">Tiki wiki</option>
+				<option value="text/x-toml" id="toml">TOML</option>
+				<option value="text/x-tornado" id="tornado">Tornado</option>
+				<option value="text/troff" id="troff">troff</option>
+				<option value="text/x-ttcn" id="ttcn">TTCN</option>
+				<option value="text/x-ttcn-cfg" id="ttcn-cfg">TTCN_CFG</option>
+				<option value="text/turtle" id="turtle">Turtle</option>
+				<option value="application/typescript" id="javascript">TypeScript</option>
+				<option value="text/typescript-jsx" id="jsx">TypeScript-JSX</option>
+				<option value="text/x-twig" id="twig">Twig</option>
+				<option value="text/x-webidl" id="webidl">Web IDL</option>
+				<option value="text/x-vb" id="vb">VB.NET</option>
+				<option value="text/vbscript" id="vbscript">VBScript</option>
+				<option value="text/velocity" id="velocity">Velocity</option>
+				<option value="text/x-verilog" id="verilog">Verilog</option>
+				<option value="text/x-vhdl" id="vhdl">VHDL</option>
+				<option value="script/x-vue" id="vue">Vue.js Component</option>
+				<option value="application/xml" id="xml">XML</option>
+				<option value="application/xquery" id="xquery">XQuery</option>
+				<option value="text/x-yacas" id="yacas">Yacas</option>
+				<option value="text/x-yaml" id="yaml">YAML</option>
+				<option value="text/x-z80" id="z80">Z80</option>
+				<option value="text/x-mscgen" id="mscgen">mscgen</option>
+				<option value="text/x-xu" id="mscgen">xu</option>
+				<option value="text/x-msgenny" id="mscgen">msgenny</option>
+				<option value="text/webassembly" id="wast">WebAssembly</option>
+			</select>
+		</div>
+		<div id="code"></div>
+	</div>
+	<script>
+		let value = `i like turtles`;
+	</script>
+	<script src="script.js"></script>
+</body>
+</html>

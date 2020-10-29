@@ -1,0 +1,157 @@
+APL
+PGP
+ASN.1
+Asterisk
+Brainfuck
+C
+C++
+Cobol
+C#
+Clojure
+ClojureScript
+Closure Stylesheets (GSS)
+CMake
+CoffeeScript
+Common Lisp
+Cypher
+Cython
+Crystal
+CSS
+CQL
+D
+Dart
+diff
+Django
+Dockerfile
+DTD
+Dylan
+EBNF
+ECL
+edn
+Eiffel
+Elm
+Embedded Javascript
+Embedded Ruby
+Erlang
+Esper
+Factor
+FCL
+Forth
+Fortran
+F#
+Gas
+Gherkin
+GitHub Flavored Markdown
+Go
+Groovy
+HAML
+Haskell
+Haskell (Literate)
+Haxe
+HXML
+ASP.NET
+HTML
+HTTP
+IDL
+Pug
+Java
+Java Server Pages
+JavaScript
+JSON
+JSON-LD
+JSX
+Jinja2
+Julia
+Kotlin
+LESS
+LiveScript
+Lua
+Markdown
+mIRC
+MariaDB SQL
+Mathematica
+Modelica
+MUMPS
+MS SQL
+mbox
+MySQL
+Nginx
+NSIS
+NTriples
+Objective-C
+Objective-C++
+OCaml
+Octave
+Oz
+Pascal
+PEG.js
+Perl
+PHP
+Pig
+Plain Text
+PLSQL
+PostgreSQL
+PowerShell
+Properties files
+ProtoBuf
+Python
+Puppet
+Q
+R
+reStructuredText
+RPM Changes
+RPM Spec
+Ruby
+Rust
+SAS
+Sass
+Scala
+Scheme
+SCSS
+Shell
+Sieve
+Slim
+Smalltalk
+Smarty
+Solr
+SML
+Soy
+SPARQL
+Spreadsheet
+SQL
+SQLite
+Squirrel
+Stylus
+Swift
+sTeX
+LaTeX
+SystemVerilog
+Tcl
+Textile
+TiddlyWiki
+Tiki wiki
+TOML
+Tornado
+troff
+TTCN
+TTCN_CFG
+Turtle
+TypeScript
+TypeScript-JSX
+Twig
+Web IDL
+VB.NET
+VBScript
+Velocity
+Verilog
+VHDL
+Vue.js Component
+XML
+XQuery
+Yacas
+YAML
+Z80
+mscgen
+xu
+msgenny
+WebAssembly
