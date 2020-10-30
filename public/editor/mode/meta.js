@@ -114,6 +114,7 @@
     {name: "Puppet", mime: "text/x-puppet", mode: "puppet", ext: ["pp"]},
     {name: "Q", mime: "text/x-q", mode: "q", ext: ["q"]},
     {name: "R", mime: "text/x-rsrc", mode: "r", ext: ["r", "R"], alias: ["rscript"]},
+    {name: "Racket", mime: "text/racket", mode: "racket", ext: ["rkt"]},
     {name: "reStructuredText", mime: "text/x-rst", mode: "rst", ext: ["rst"], alias: ["rst"]},
     {name: "RPM Changes", mime: "text/x-rpm-changes", mode: "rpm"},
     {name: "RPM Spec", mime: "text/x-rpm-spec", mode: "rpm", ext: ["spec"]},
