@@ -153,6 +153,6 @@ function join(room, name) {
 		lang();
 	});
 	codeMirror.on("cursorActivity", e => {
-		console.log(e.doc.sel.ranges[0]);
+		socket.emit("cursorActivity", e.doc.sel.ranges[0]);
 	});
 }
