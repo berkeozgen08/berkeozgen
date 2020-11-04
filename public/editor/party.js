@@ -242,7 +242,7 @@ function join(room, name) {
 	socket.on("removeCursor", data => {
 		let { marker, color, selection } = users.get(data);
 		marker.clear();
-		selection.clear();
+		if (selection) selection.clear();
 		colors.forEach(i => { if (i.color == color) i.used = false; });
 		users.delete(data);
 	});
