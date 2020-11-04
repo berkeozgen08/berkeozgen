@@ -14,6 +14,10 @@ if (window.innerWidth <= 500) {
 	codeMirror.setOption("indentWithTabs", false);
 }
 
+let colors = ["rgb(45 100 255)", "rgb(252, 89, 64)", "rgb(189, 255, 191)", "rgb(255, 255, 0)", "rgb(51, 255, 252)", "rgb(255, 0, 255)", "rgb(255, 255, 255)"];
+colors = colors.map(i => { return { color: i, used: false }; });
+let users = new Map();
+
 popupcontainer = document.querySelector(".popup-container");
 
 document.getElementById("submit").addEventListener("click", async e => {
@@ -129,6 +133,7 @@ function join(room, name) {
 	socket.on("online", data => {
 		onlineCount.innerText = data;
 		if (data <= 1) needsInitialization = false;
+		users.delete("")
 	});
 	socket.on("needsInitialization", data => {
 		if (data) {
@@ -152,7 +157,93 @@ function join(room, name) {
 		document.querySelector("select").value = data;
 		lang();
 	});
-	codeMirror.on("cursorActivity", e => {
+	codeMirror.on("cursorActivity", e => {console.log("SENT");
 		socket.emit("cursorActivity", e.doc.sel.ranges[0]);
+	});
+	const addCursor = (name, id) => {
+		let color;
+		if (onlineCount.innerText <= colors.length) {
+			let rand = parseInt(Math.random() * colors.length);
+			while (colors[rand].used) {
+				rand = parseInt(Math.random() * colors.length);
+			}
+			color = colors[rand].color;
+			colors[rand].used = true;
+		} else {
+			color = colors[parseInt(Math.random() * colors.length)];
+		}
+		users.set(id, { name, marker: null, color, selection: null, initial: true });
+	};
+	socket.on("cursorJoin", data => {
+		let { name, id } = data;
+		addCursor(name, id);
+	});
+	socket.on("cursorActivity", data => {console.log("RECEIVED", data);
+		let { anchor, head, name, id } = data;
+		let user = users.get(id);
+		if (user && user.marker) user.marker.clear();
+		if (user && user.selection) user.selection.clear();
+		let cursorCoords = codeMirror.cursorCoords(head);
+		let cursorElement = document.createElement("span");
+		cursorElement.style.borderLeftStyle = "solid";
+		cursorElement.style.borderLeftWidth = "2px";
+		cursorElement.style.borderLeftColor = user.color;
+		cursorElement.style.height = `${(cursorCoords.bottom - cursorCoords.top)}px`;
+		cursorElement.style.padding = 0;
+		cursorElement.style.zIndex = 0;
+		cursorElement.style.position = "absolute";
+		let nameBox = document.createElement("h1");
+		nameBox.innerText = name;
+		nameBox.style.position = "absolute";
+		nameBox.style.background = user.color;
+		nameBox.style.color = "black";
+		nameBox.style.padding = "4px";
+		nameBox.style.userSelect = "none";
+		nameBox.style.top = `${cursorCoords.bottom - cursorCoords.top}px`;
+		nameBox.style.left = "-2px";
+		nameBox.style.fontSize = "13px";
+		nameBox.style.margin = 0;
+		nameBox.style.zIndex = 0;
+		nameBox.style.boxShadow = "1px 1px #000000";
+		if (user.initial) {
+			setTimeout(() => {
+				nameBox.style.display = "none";
+				user.initial = false;
+			}, 3000);
+		} else {
+			nameBox.style.display = "none";
+		}
+		cursorElement.appendChild(nameBox);
+		cursorElement.addEventListener("mouseover", e => {
+			nameBox.style.display = "block";
+			user.initial = true;
+		});
+		cursorElement.addEventListener("mouseout", e => {
+			setTimeout(() => {
+				nameBox.style.display = "none";
+				user.initial = false;
+			}, 3000);
+		});
+		user.marker = codeMirror.setBookmark(head, { widget: cursorElement });
+		if (head.line > anchor.line || (head.line == anchor.line && head.ch > anchor.ch)) {
+			user.selection = codeMirror.markText(anchor, head, { className: "CodeMirror-selected", css: `background: ${user.color.replace(")", ", 0.2)")}` });
+		} else if (anchor.line > head.line || (head.line == anchor.line && anchor.ch > head.ch)) {
+			user.selection = codeMirror.markText(head, anchor, { className: "CodeMirror-selected", css: `background: ${user.color.replace(")", ", 0.2)")}` });
+		}
+	});
+	socket.on("currentCursors", data => {
+		if (onlineCount.innerText > 1) {
+			for (let i of data) {
+				let { name, id } = i;
+				addCursor(name, id);
+			}
+		}
+	});
+	socket.on("removeCursor", data => {
+		let { marker, color, selection } = users.get(data);
+		marker.clear();
+		selection.clear();
+		colors.forEach(i => { if (i.color == color) i.used = false; });
+		users.delete(data);
 	});
 }
