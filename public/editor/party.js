@@ -73,7 +73,7 @@ if (window.location.search) {
 	document.getElementById("party").addEventListener("click", click);
 
 	document.getElementById("submit").addEventListener("click", e => {
-		join(undefined, document.getElementById("name").value);
+		join(undefined, document.getElementById("name").value || "no name");
 		let party = document.getElementById("party");
 		party.innerText = "Copy Invitation";
 		party.removeEventListener("click", click);
