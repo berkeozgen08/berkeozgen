@@ -157,7 +157,7 @@ function join(room, name) {
 		document.querySelector("select").value = data;
 		lang();
 	});
-	codeMirror.on("cursorActivity", e => {console.log("SENT");
+	codeMirror.on("cursorActivity", e => {
 		socket.emit("cursorActivity", e.doc.sel.ranges[0]);
 	});
 	const addCursor = (name, id) => {
@@ -178,7 +178,7 @@ function join(room, name) {
 		let { name, id } = data;
 		addCursor(name, id);
 	});
-	socket.on("cursorActivity", data => {console.log("RECEIVED", data);
+	socket.on("cursorActivity", data => {
 		let { anchor, head, name, id } = data;
 		let user = users.get(id);
 		if (user && user.marker) user.marker.clear();
