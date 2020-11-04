@@ -1,6 +1,6 @@
 let socket = io.connect("/chatling", {
 	"transports": ['websocket']
- });
+});
 
 $(".btn-default").click(() => {
 	let msg = $(".form-control")[0].value.trim();
