@@ -21,8 +21,8 @@ if (window.innerWidth >= 768) {
 	codeMirror.setOption("scrollbarStyle", "overlay");
 }
 
-document.querySelector("select").addEventListener("change", async function(e) {
-	let mime = this.value;
+const lang = async () => {
+	let mime = document.querySelector("select").value;
 	let mode = CodeMirror.findModeByMIME(mime).mode;
 	if (mode != "null") {
 		if (mode.includes("html")) {
@@ -41,4 +41,8 @@ document.querySelector("select").addEventListener("change", async function(e) {
 		eval(parsed);
 	}
 	codeMirror.setOption("mode", mime);
+}
+
+document.querySelector("select").addEventListener("change", e => {
+	lang();
 });

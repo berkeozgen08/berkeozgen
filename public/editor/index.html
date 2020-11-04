@@ -23,6 +23,8 @@
 	<script src="addon/search/search.js"></script>
 	<script src="addon/selection/active-line.js"></script>
 	<script src="addon/scroll/simplescrollbars.js"></script>
+	
+	<script src="https://cdnjs.cloudflare.com/ajax/libs/socket.io/2.3.0/socket.io.js"></script>
 </head>
 <body>
 	<div class="container">
@@ -190,9 +192,17 @@
 		</div>
 		<div id="code"></div>
 	</div>
+	<div class="popup-container">
+		<div class="popup">
+			<input type="text" name="name" id="name" placeholder="Username" autocomplete="off">
+			<input type="submit" id="submit" value="Create">
+		</div>
+	</div>
+	<div class="notification-container"></div>
 	<script>
 		let value = `i like turtles`;
 	</script>
 	<script src="script.js"></script>
+	<script src="party.js"></script>
 </body>
 </html>

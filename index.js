@@ -4,6 +4,7 @@ const socket = require("socket.io");
 const path = require("path");
 const favicon = require("serve-favicon");
 const hsts = require("hsts");
+const { customAlphabet } = require("nanoid");
 require("dotenv").config();
 
 const app = express();
@@ -29,6 +30,7 @@ const blackjack = require(path.join(__dirname, "apps", "blackjack.js"))(io);
 const chatling = require(path.join(__dirname, "apps", "chatling.js"))(io, chatlingDB);
 const snake = require(path.join(__dirname, "apps", "snake.js"))(app, snakeDB);
 const urlshortener = require(path.join(__dirname, "apps", "urlshortener.js"))(app, urlDB);
+const editor = require(path.join(__dirname, "apps", "editor.js"))(io, customAlphabet);
 
 const notFound = path.join(__dirname, "public", "404.html");
 app.use((req, res, next) => {
