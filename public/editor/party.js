@@ -1,4 +1,6 @@
 
+let name;
+
 const copy = text => {
 	let input = document.createElement("input");
 	input.value = text;
@@ -22,6 +24,7 @@ popupcontainer = document.querySelector(".popup-container");
 
 document.getElementById("submit").addEventListener("click", async e => {
 	popupcontainer.classList.remove("active");
+	document.querySelector(".container").classList.remove("darken");
 });
 
 document.querySelectorAll("input").forEach(i => {
@@ -36,9 +39,11 @@ let needsInitialization = true;
 
 if (window.location.search) {
 	popupcontainer.classList.add("active");
+	document.querySelector(".container").classList.add("darken");
 	document.getElementById("name").focus();
 	document.getElementById("submit").addEventListener("click", e => {
-		join(window.location.search.substring(1), document.getElementById("name").value || "no name");
+		name = document.getElementById("name").value || "no name";
+		join(window.location.search.substring(1), name);
 	});
 	document.getElementById("submit").value = "Join";
 	let invite = document.createElement("button");
@@ -57,24 +62,28 @@ if (window.location.search) {
 	popupcontainer.addEventListener("click", e => {
 		if (e.target == popupcontainer) {
 			popupcontainer.classList.remove("active");
+			document.querySelector(".container").classList.remove("darken");
 		}
 	});
 	
 	popupcontainer.addEventListener("keydown", e => {
 		if (e.key == "Escape") {
 			popupcontainer.classList.remove("active");
+			document.querySelector(".container").classList.remove("darken");
 		}
 	});
 
 	const click = e => {
 		popupcontainer.classList.add("active");
+		document.querySelector(".container").classList.add("darken");
 		document.getElementById("name").focus();
 	};
 
 	document.getElementById("party").addEventListener("click", click);
 
 	document.getElementById("submit").addEventListener("click", e => {
-		join(undefined, document.getElementById("name").value || "no name");
+		name = document.getElementById("name").value || "no name";
+		join(undefined, name);
 		let party = document.getElementById("party");
 		party.innerText = "Copy Invitation";
 		party.removeEventListener("click", click);
@@ -103,12 +112,13 @@ function join(room, name) {
 	socket.emit("join", { room, name });
 	socket.on("notf", data => {
 		createNotf(data);
-		if (data.includes("</a>")) {
-			let node = document.createElement("div");
-			node.innerHTML = data;
-			url = node.innerText;
-			copy(url);
-		}
+	});
+	socket.on("joinURL", data => {
+		createNotf(data);
+		let node = document.createElement("div");
+		node.innerHTML = data;
+		url = node.innerText;
+		copy(url);
 	});
 	let detectChange = true;
 	codeMirror.on("change", (ce, e) => {
@@ -253,4 +263,174 @@ function join(room, name) {
 		colors.forEach(i => { if (i.color == color) i.used = false; });
 		users.delete(data);
 	});
+
+	initializeChat(socket);
+}
+
+function initializeChat(socket) {
+	let chatContainer = document.createElement("div");
+	chatContainer.classList.add("chat-container");
+	chatContainer.style.backgroundColor = "#1f2329";
+	chatContainer.style.position = "fixed";
+	chatContainer.style.top = 0;
+	chatContainer.style.left = "100%";
+	chatContainer.style.margin = 0;
+	chatContainer.style.width = "400px";
+	chatContainer.style.height = "100%";
+	chatContainer.style.zIndex = "9999";
+	chatContainer.style.display = "flex";
+	chatContainer.style.alignItems = "center";
+
+	let hover = document.createElement("div");
+	hover.style.margin = 0;
+	hover.style.position = "absolute";
+	hover.style.right = "100%";
+	hover.style.width = "auto";
+	hover.style.height = "auto";
+	hover.style.display = "flex";
+	hover.style.alignItems = "center";
+	hover.style.overflow = "hidden";
+
+	let arrow = document.createElement("div");
+	arrow.classList.add("chat-arrow");
+	arrow.style.backgroundColor = "#1f2329";
+	arrow.style.color = "#d1daeb";
+	arrow.style.borderRadius = "50%";
+	arrow.style.padding = "16px";
+	arrow.style.width = "50px";
+	arrow.style.height = "50px";
+	arrow.style.fontSize = "30px";
+	arrow.style.display = "flex";
+	arrow.style.alignItems = "center";
+	arrow.style.margin = 0;
+	arrow.style.position = "relative";
+	arrow.style.right = "-100%";
+	arrow.style.userSelect = "none";
+	arrow.style.cursor = "pointer";
+	let arrowText = document.createElement("p");
+	arrowText.classList.add("chat-arrow-text");
+	arrowText.innerText = "<";
+	arrow.appendChild(arrowText);
+
+	const openArrow = e => {
+		arrow.classList.add("active");
+	};
+	const closeArrow = e => {
+		arrow.classList.remove("active");
+	};
+	const closeChatContainer = function (e) {
+		chatContainer.classList.remove("active");
+		hover.addEventListener("mouseleave", closeArrow);
+		arrowText.classList.remove("active");
+		document.querySelector(".container").classList.remove("darken");
+		closeArrow(e);
+		this.removeEventListener("click", closeChatContainer);
+		arrow.removeEventListener("click", closeChatContainer);
+	};
+
+	hover.addEventListener("mouseover", openArrow);
+	hover.addEventListener("mouseleave", closeArrow);
+	arrow.addEventListener("click", e => {
+		document.querySelector(".container").classList.add("darken");
+		chatContainer.classList.add("active");
+		arrowText.classList.add("active");
+		hover.removeEventListener("mouseleave", closeArrow);
+		document.querySelector(".container").addEventListener("click", closeChatContainer);
+		arrow.addEventListener("click", closeChatContainer);
+	});
+
+	let inputs = document.createElement("div");
+	inputs.style.alignSelf = "flex-end";
+	inputs.style.minWidth = "100%";
+	inputs.style.minHeight = "1%";
+	inputs.style.display = "flex";
+	inputs.style.position = "absolute";
+
+	let input = document.createElement("input");
+	input.style.alignSelf = "flex-end";
+	input.placeholder = "Type a message.";
+	input.style.padding = "8px";
+	input.style.margin = "16px 4px 16px 16px";
+
+	let send = document.createElement("button");
+	send.innerText = "Send";
+	send.style.padding = "8px";
+	send.style.margin = "16px 16px 16px 4px";
+	send.style.cursor = "pointer";
+	send.addEventListener("click", e => {
+		if (input.value == "") return;
+		let message = `${name}: ${input.value}`;
+		socket.emit("message", message);
+		addBlob(message);
+		input.value = "";
+		chat.scrollTo(0, chat.scrollHeight);
+	});
+	input.addEventListener("keydown", e => {
+		if (e.key == "Enter") {
+			send.click();
+		}
+	});
+
+	let chat = document.createElement("div");
+	chat.classList.add("chat");
+	chat.style.minWidth = "100%";
+	chat.style.maxHeight = "calc(100% - 69.6px)";
+	chat.style.position = "absolute";
+	chat.style.overflow = "scroll";
+	chat.style.overflowX = "hidden";
+	chat.style.bottom = "69.6px";
+	
+	let blobContainer = document.createElement("div");
+	blobContainer.style.display = "flex";
+	blobContainer.style.flexDirection = "column";
+
+	const addBlob = message => {
+		let blob = document.createElement("div");
+		blob.classList.add("chat-blob");
+		blob.style.width = "auto";
+		blob.style.padding = "16px";
+		if (window.innerWidth >= 768) {
+			blob.style.margin = "4px 12px 4px 16px";
+		} else {
+			blob.style.margin = "4px 16px 4px 16px";
+		}
+		blob.style.userSelect = "unset";
+		blob.style.wordBreak = "break-word";
+		blob.innerText = message;
+		blobContainer.appendChild(blob);
+	};
+
+	let audio = document.createElement("audio");
+	audio.volume = 0.1;
+	let source = document.createElement("source");
+	source.src = "message.mp3";
+	
+	socket.on("message", data => {
+		if (!chatContainer.classList.contains("active")) {
+			createNotf(data);
+		}
+		audio.play();
+		addBlob(data);
+		chat.scrollTo(0, chat.scrollHeight);
+	});
+
+	let notf = document.querySelector(".notification-container");
+	notf.style.right = "calc(100% + 16px)";
+    notf.style.position = "absolute";
+    notf.style.alignSelf = "flex-end";
+
+	hover.appendChild(arrow);
+	inputs.appendChild(input);
+	inputs.appendChild(send);
+	chat.appendChild(blobContainer);
+	chatContainer.appendChild(hover);
+	chatContainer.appendChild(chat);
+	chatContainer.appendChild(inputs);
+	chatContainer.appendChild(notf);
+	document.body.appendChild(chatContainer);
+	audio.appendChild(source);
+	document.body.appendChild(audio);
+
+	openArrow();
+	setTimeout(closeArrow, 1000);
 }

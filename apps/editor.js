@@ -7,7 +7,7 @@ module.exports = (io, customAlphabet) => {
 			let id = customAlphabet("0123456789", 10)();
 			if (!room) {
 				room = customAlphabet("abcdefghijklmnopqrstuvwxyz", 8)();
-				socket.emit("notf", `<a target="_blank" href="https://berkeozgen.me/editor/?${room}">https://berkeozgen.me/editor/?${room}</a>`);
+				socket.emit("joinURL", `<a target="_blank" href="https://berkeozgen.me/editor/?${room}">https://berkeozgen.me/editor/?${room}</a>`);
 			}
 			socket.join(room);
 			socket.to(room).emit("notf", `${name} has joined.`);
@@ -29,6 +29,9 @@ module.exports = (io, customAlphabet) => {
 				data.name = name;
 				data.id = id;
 				socket.to(room).emit("cursorActivity", data);
+			});
+			socket.on("message", data => {
+				socket.to(room).emit("message", data);
 			});
 			socket.on("disconnect", data => {
 				editor.to(room).emit("online", (editor.adapter.rooms[room] || { length: 0 }).length);
