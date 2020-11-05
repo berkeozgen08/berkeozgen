@@ -111,6 +111,8 @@ input {
 	background-color: rgba(0, 0, 0, 0);
 }
 .notification {
+	/* animation: slideUp 1s;
+	position: relative; */
 	min-width: 95%;
 	padding: 8px;
 	display: flex;
@@ -121,6 +123,16 @@ input {
 	text-align: center;
 	flex-direction: column;
 }
+/* @keyframes slideUp {
+	from {
+		position: absolute;
+		bottom: -100%;
+	}
+	to {
+		position: absolute;
+		bottom: 100%;
+	}
+} */
 .notification button {
 	margin: 4px;
 }

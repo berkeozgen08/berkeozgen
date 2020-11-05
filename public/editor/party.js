@@ -299,7 +299,6 @@ function initializeChat(socket) {
 	arrow.style.padding = "16px";
 	arrow.style.width = "50px";
 	arrow.style.height = "50px";
-	arrow.style.fontSize = "30px";
 	arrow.style.display = "flex";
 	arrow.style.alignItems = "center";
 	arrow.style.margin = 0;
@@ -310,6 +309,7 @@ function initializeChat(socket) {
 	let arrowText = document.createElement("p");
 	arrowText.classList.add("chat-arrow-text");
 	arrowText.innerText = "<";
+	arrowText.style.fontSize = "30px";
 	arrow.appendChild(arrowText);
 
 	const openArrow = e => {
@@ -414,11 +414,6 @@ function initializeChat(socket) {
 		chat.scrollTo(0, chat.scrollHeight);
 	});
 
-	let notf = document.querySelector(".notification-container");
-	notf.style.right = "calc(100% + 16px)";
-    notf.style.position = "absolute";
-    notf.style.alignSelf = "flex-end";
-
 	hover.appendChild(arrow);
 	inputs.appendChild(input);
 	inputs.appendChild(send);
@@ -426,11 +421,26 @@ function initializeChat(socket) {
 	chatContainer.appendChild(hover);
 	chatContainer.appendChild(chat);
 	chatContainer.appendChild(inputs);
-	chatContainer.appendChild(notf);
 	document.body.appendChild(chatContainer);
 	audio.appendChild(source);
 	document.body.appendChild(audio);
 
 	openArrow();
 	setTimeout(closeArrow, 1000);
+
+	if (window.innerWidth < 768) {
+		chatContainer.style.width = "90%";
+		arrow.style.padding = "12px";
+		arrow.style.width = "30px";
+		arrow.style.height = "30px";
+		arrowText.style.fontSize = "20px";
+		hover.style.height = "60px";
+	} else {
+		let notf = document.querySelector(".notification-container");
+		notf.style.right = "calc(100% + 16px)";
+		notf.style.position = "absolute";
+		notf.style.alignSelf = "flex-end";
+		chatContainer.appendChild(notf);
+		arrowText.style.paddingBottom = "4px";
+	}
 }
