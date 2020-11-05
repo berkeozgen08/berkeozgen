@@ -203,8 +203,9 @@ function join(room, name) {
 		nameBox.style.left = "-2px";
 		nameBox.style.fontSize = "13px";
 		nameBox.style.margin = 0;
-		nameBox.style.zIndex = 0;
+		nameBox.style.zIndex = 9999;
 		nameBox.style.boxShadow = "1px 1px #000000";
+		nameBox.style.pointerEvents = "none";
 		if (user.initial) {
 			setTimeout(() => {
 				nameBox.style.display = "none";
