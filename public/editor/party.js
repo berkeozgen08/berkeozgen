@@ -192,39 +192,49 @@ function join(room, name) {
 		cursorElement.style.padding = 0;
 		cursorElement.style.zIndex = 0;
 		cursorElement.style.position = "absolute";
-		let nameBox = document.createElement("h1");
-		nameBox.innerText = name;
-		nameBox.style.position = "absolute";
-		nameBox.style.background = user.color;
-		nameBox.style.color = "black";
-		nameBox.style.padding = "4px";
-		nameBox.style.userSelect = "none";
-		nameBox.style.top = `${cursorCoords.bottom - cursorCoords.top}px`;
-		nameBox.style.left = "-2px";
-		nameBox.style.fontSize = "13px";
-		nameBox.style.margin = 0;
-		nameBox.style.zIndex = 9999;
-		nameBox.style.boxShadow = "1px 1px #000000";
-		nameBox.style.pointerEvents = "none";
-		if (user.initial) {
-			setTimeout(() => {
+		if (!user.nameBox) {
+			if (!document.querySelector(".userCursors")) {
+				let div = document.createElement("div");
+				div.classList.add("userCursors");
+				document.body.appendChild(div);
+			}
+			let nameBox = document.createElement("h1");
+			nameBox.innerText = name;
+			nameBox.style.position = "fixed";
+			nameBox.style.background = user.color;
+			nameBox.style.color = "black";
+			nameBox.style.padding = "4px";
+			nameBox.style.userSelect = "none";
+			nameBox.style.top = `${cursorCoords.top + parseInt(cursorElement.style.height.replace("px", ""))}px`;
+			nameBox.style.left = `${cursorCoords.left}px`;
+			nameBox.style.fontSize = "13px";
+			nameBox.style.margin = 0;
+			nameBox.style.zIndex = 9999;
+			nameBox.style.boxShadow = "1px 1px #000000";
+			nameBox.style.pointerEvents = "none";
+			if (user.initial) {
+				setTimeout(() => {
+					nameBox.style.display = "none";
+					user.initial = false;
+				}, 3000);
+			} else {
 				nameBox.style.display = "none";
-				user.initial = false;
-			}, 3000);
-		} else {
-			nameBox.style.display = "none";
+			}
+			document.querySelector(".userCursors").appendChild(nameBox);
+			user.nameBox = nameBox;
 		}
-		cursorElement.appendChild(nameBox);
 		cursorElement.addEventListener("mouseover", e => {
-			nameBox.style.display = "block";
+			user.nameBox.style.display = "block";
 			user.initial = true;
 		});
 		cursorElement.addEventListener("mouseout", e => {
 			setTimeout(() => {
-				nameBox.style.display = "none";
+				user.nameBox.style.display = "none";
 				user.initial = false;
 			}, 3000);
 		});
+		user.nameBox.style.top = `${cursorCoords.top + parseInt(cursorElement.style.height.replace("px", ""))}px`;
+		user.nameBox.style.left = `${cursorCoords.left}px`;
 		user.marker = codeMirror.setBookmark(head, { widget: cursorElement });
 		if (head.line > anchor.line || (head.line == anchor.line && head.ch > anchor.ch)) {
 			user.selection = codeMirror.markText(anchor, head, { className: "CodeMirror-selected", css: `background: ${user.color.replace(")", ", 0.2)")}` });
@@ -242,7 +252,7 @@ function join(room, name) {
 	});
 	socket.on("removeCursor", data => {
 		let { marker, color, selection } = users.get(data);
-		marker.clear();
+		if (marker) marker.clear();
 		if (selection) selection.clear();
 		colors.forEach(i => { if (i.color == color) i.used = false; });
 		users.delete(data);
