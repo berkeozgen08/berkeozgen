@@ -14,7 +14,7 @@ if (window.innerWidth <= 500) {
 	codeMirror.setOption("indentWithTabs", false);
 }
 
-let colors = ["rgb(45 100 255)", "rgb(252, 89, 64)", "rgb(189, 255, 191)", "rgb(255, 255, 0)", "rgb(51, 255, 252)", "rgb(255, 0, 255)", "rgb(255, 255, 255)"];
+let colors = ["rgb(45, 100, 255)", "rgb(252, 89, 64)", "rgb(189, 255, 191)", "rgb(255, 255, 0)", "rgb(51, 255, 252)", "rgb(255, 0, 255)", "rgb(255, 255, 255)"];
 colors = colors.map(i => { return { color: i, used: false }; });
 let users = new Map();
 
@@ -40,6 +40,7 @@ if (window.location.search) {
 	document.getElementById("submit").addEventListener("click", e => {
 		join(window.location.search.substring(1), document.getElementById("name").value || "no name");
 	});
+	document.getElementById("submit").value = "Join";
 	let invite = document.createElement("button");
 	invite.innerText = "Copy Invitation";
 	invite.id = "party";
@@ -170,7 +171,7 @@ function join(room, name) {
 			color = colors[rand].color;
 			colors[rand].used = true;
 		} else {
-			color = colors[parseInt(Math.random() * colors.length)];
+			color = colors[parseInt(Math.random() * colors.length)].color;
 		}
 		users.set(id, { name, marker: null, color, selection: null, initial: true });
 	};
@@ -183,7 +184,7 @@ function join(room, name) {
 		let user = users.get(id);
 		if (user && user.marker) user.marker.clear();
 		if (user && user.selection) user.selection.clear();
-		let cursorCoords = codeMirror.cursorCoords(head);
+		let cursorCoords = codeMirror.cursorCoords(head, "local");
 		let cursorElement = document.createElement("span");
 		cursorElement.style.borderLeftStyle = "solid";
 		cursorElement.style.borderLeftWidth = "2px";
@@ -193,24 +194,17 @@ function join(room, name) {
 		cursorElement.style.zIndex = 0;
 		cursorElement.style.position = "absolute";
 		if (!user.nameBox) {
-			if (!document.querySelector(".userCursors")) {
-				let div = document.createElement("div");
-				div.classList.add("userCursors");
-				document.body.appendChild(div);
-			}
 			let nameBox = document.createElement("h1");
 			nameBox.innerText = name;
-			nameBox.style.position = "fixed";
+			nameBox.style.position = "absolute";
 			nameBox.style.background = user.color;
 			nameBox.style.color = "black";
 			nameBox.style.padding = "4px";
 			nameBox.style.userSelect = "none";
-			nameBox.style.top = `${cursorCoords.top + parseInt(cursorElement.style.height.replace("px", ""))}px`;
-			nameBox.style.left = `${cursorCoords.left}px`;
 			nameBox.style.fontSize = "13px";
 			nameBox.style.margin = 0;
 			nameBox.style.zIndex = 9999;
-			nameBox.style.boxShadow = "1px 1px #000000";
+			nameBox.style.boxShadow = "2px 2px #000000";
 			nameBox.style.pointerEvents = "none";
 			if (user.initial) {
 				setTimeout(() => {
@@ -220,7 +214,9 @@ function join(room, name) {
 			} else {
 				nameBox.style.display = "none";
 			}
-			document.querySelector(".userCursors").appendChild(nameBox);
+			document.querySelector(".CodeMirror-scroll").appendChild(nameBox);
+			nameBox.style.top = `${cursorCoords.bottom}px`;
+			nameBox.style.left = `${codeMirror.cursorCoords(head).left}px`;
 			user.nameBox = nameBox;
 		}
 		cursorElement.addEventListener("mouseover", e => {
@@ -233,8 +229,8 @@ function join(room, name) {
 				user.initial = false;
 			}, 3000);
 		});
-		user.nameBox.style.top = `${cursorCoords.top + parseInt(cursorElement.style.height.replace("px", ""))}px`;
-		user.nameBox.style.left = `${cursorCoords.left}px`;
+		user.nameBox.style.top = `${cursorCoords.bottom}px`;
+		user.nameBox.style.left = `${codeMirror.cursorCoords(head).left}px`;
 		user.marker = codeMirror.setBookmark(head, { widget: cursorElement });
 		if (head.line > anchor.line || (head.line == anchor.line && head.ch > anchor.ch)) {
 			user.selection = codeMirror.markText(anchor, head, { className: "CodeMirror-selected", css: `background: ${user.color.replace(")", ", 0.2)")}` });
