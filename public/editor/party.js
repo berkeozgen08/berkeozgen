@@ -426,7 +426,11 @@ function initializeChat(socket) {
 	document.body.appendChild(audio);
 
 	openArrow();
-	setTimeout(closeArrow, 1000);
+	setTimeout(() => {
+		if (!chatContainer.classList.contains("active") && !hover.querySelector(":hover")) {
+			closeArrow();
+		}
+	}, 3000);
 
 	if (window.innerWidth < 768) {
 		chatContainer.style.width = "90%";
