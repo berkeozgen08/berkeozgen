@@ -63,6 +63,7 @@ select {
 }
 .popup-container {
 	transition: 0.3s;
+	transform: scale(0);
 	position: fixed;
 	top: 0;
 	left: 0;
@@ -73,11 +74,10 @@ select {
 	align-items: center;
 	/* background-color: rgba(0, 0, 0, 0.5); */
 	background: transparent;
-	display: none;
 	z-index: 9999;
 }
 .popup-container.active {
-	display: flex;
+	transform: scale(1);
 }
 .popup {
 	width: 30vw;
@@ -111,9 +111,9 @@ input {
 	background-color: rgba(0, 0, 0, 0);
 }
 .notification {
-	/* animation: slideUp 1s;
-	position: relative; */
-	min-width: 95%;
+	position: relative;
+	min-width: calc(100% - 16px);
+	min-height: 21.6px;
 	padding: 8px;
 	display: flex;
 	justify-content: center;
@@ -123,16 +123,20 @@ input {
 	text-align: center;
 	flex-direction: column;
 }
-/* @keyframes slideUp {
+.notification.slideIn {
+	animation: slide 0.5s;
+}
+.notification.slideOut {
+	animation: slide 0.5s reverse;
+}
+@keyframes slide {
 	from {
-		position: absolute;
-		bottom: -100%;
+		left: calc(100% + 32px);
 	}
 	to {
-		position: absolute;
-		bottom: 100%;
+		left: 0;
 	}
-} */
+}
 .notification button {
 	margin: 4px;
 }
@@ -243,6 +247,9 @@ a:visited {
 		width: 75vw;
 		left: 50%;
 		transform: translate(-50%, 0);
+	}
+	.notification {
+		word-break: break-word;
 	}
 	.popup {
 		width: 75vw;

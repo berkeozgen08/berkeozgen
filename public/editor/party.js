@@ -95,13 +95,21 @@ if (window.location.search) {
 	needsInitialization = false;
 }
 
-function createNotf(message) {
+const createNotf = message => {
 	let notf = document.createElement("div");
 	notf.classList.add("notification");
+	notf.classList.add("slideIn");
 	notf.innerHTML = message;
-	setTimeout(() => notf.remove(), 5000);
+	notf.addEventListener("click", () => removeNotf(notf));
+	setTimeout(() => removeNotf(notf), 5000);
 	document.querySelector(".notification-container").appendChild(notf);
-}
+};
+
+const removeNotf = notf => {
+	notf.classList.remove("slideIn");
+	setTimeout(() => notf.classList.add("slideOut"), 500);
+	setTimeout(() => notf.remove(), 1000);
+};
 
 let url;
 
@@ -462,12 +470,15 @@ function initializeChat(socket) {
 		arrow.style.width = "30px";
 		arrow.style.height = "30px";
 		arrowText.style.fontSize = "20px";
-		hover.style.height = "60px";
+		hover.style.height = "120px";
 	} else {
 		let notf = document.querySelector(".notification-container");
-		notf.style.right = "calc(100% + 16px)";
+		notf.style.right = "100%";
 		notf.style.position = "absolute";
 		notf.style.alignSelf = "flex-end";
+		notf.style.bottom = 0;
+		notf.style.padding = "16px";
+		notf.style.overflow = "hidden";
 		chatContainer.appendChild(notf);
 		arrowText.style.paddingBottom = "4px";
 	}
