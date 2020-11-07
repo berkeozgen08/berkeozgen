@@ -139,12 +139,31 @@ function join(room, name) {
 	online.innerText = "Online: ";
 	let onlineCount = document.createElement("span");
 	onlineCount.innerText = 0;
+	let onlineUsers = document.createElement("div");
+	let userList = document.createElement("ul");
+	let self = document.createElement("li");
+	self.style.listStyle = "none";
+	self.innerText = name;
+	userList.appendChild(self);
+	users.forEach(u => {
+		let user = document.createElement("li");
+		user.innerText = u.name;
+		userList.appendChild(user);
+	});
+	onlineUsers.appendChild(userList);
+	online.addEventListener("mouseover", e => {
+		onlineUsers.classList.add("active");
+	});
+	online.addEventListener("mouseout", e => {
+		onlineUsers.classList.remove("active");
+	});
 	online.appendChild(onlineCount);
+	online.appendChild(document.createElement("br"));
+	online.appendChild(onlineUsers);
 	document.querySelector(".header").appendChild(online);
 	socket.on("online", data => {
 		onlineCount.innerText = data;
 		if (data <= 1) needsInitialization = false;
-		users.delete("")
 	});
 	socket.on("needsInitialization", data => {
 		if (data) {
@@ -183,7 +202,11 @@ function join(room, name) {
 		} else {
 			color = colors[parseInt(Math.random() * colors.length)].color;
 		}
-		users.set(id, { name, marker: null, color, selection: null, initial: true });
+		let user = document.createElement("li");
+		user.style.listStyle = "none";
+		user.innerText = name;
+		userList.appendChild(user);
+		users.set(id, { name, marker: null, color, selection: null, initial: true, listElement: user });
 	};
 	socket.on("cursorJoin", data => {
 		let { name, id } = data;
@@ -261,6 +284,7 @@ function join(room, name) {
 		if (marker) marker.clear();
 		if (selection) selection.clear();
 		colors.forEach(i => { if (i.color == color) i.used = false; });
+		users.get(data).listElement.remove();
 		users.delete(data);
 	});
 
