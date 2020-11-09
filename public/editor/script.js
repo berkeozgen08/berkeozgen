@@ -46,3 +46,8 @@ const lang = async () => {
 document.querySelector("select").addEventListener("change", e => {
 	lang();
 });
+
+function loader() {
+	let loader = document.querySelector(".loader-container");
+	loader.classList.toggle("active");
+}

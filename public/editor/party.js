@@ -50,6 +50,7 @@ if (window.location.search) {
 	document.getElementById("submit").addEventListener("click", e => {
 		name = document.getElementById("name").value || "no name";
 		join(window.location.search.substring(1), name);
+		document.querySelector(".loader-container").classList.toggle("darken");
 	});
 	document.getElementById("submit").value = "Join";
 	let invite = document.createElement("button");
@@ -59,6 +60,7 @@ if (window.location.search) {
 		copy(window.location.href);
 	});
 	document.querySelector(".header").appendChild(invite);
+	document.querySelector(".loader-container").classList.toggle("darken");
 } else {
 	let party = document.createElement("button");
 	party.innerText = "Code Party";
@@ -88,6 +90,7 @@ if (window.location.search) {
 	document.getElementById("party").addEventListener("click", click);
 
 	document.getElementById("submit").addEventListener("click", e => {
+		loader();
 		name = document.getElementById("name").value || "no name";
 		join(undefined, name);
 		let party = document.getElementById("party");
@@ -97,6 +100,8 @@ if (window.location.search) {
 			copy(url);
 		});
 	});
+
+	loader();
 
 	needsInitialization = false;
 }
@@ -123,6 +128,7 @@ function join(room, name) {
 	let socket = io.connect("/editor", {
 		"transports": ["websocket"]
 	});
+	socket.on("connect", loader);
 	socket.emit("join", { room, name });
 	socket.on("notf", data => {
 		createNotf(data);
@@ -247,7 +253,7 @@ function join(room, name) {
 			nameBox.style.userSelect = "none";
 			nameBox.style.fontSize = "13px";
 			nameBox.style.margin = 0;
-			nameBox.style.zIndex = 9999;
+			nameBox.style.zIndex = 9997;
 			nameBox.style.boxShadow = "2px 2px #000000";
 			nameBox.style.pointerEvents = "none";
 			if (user.initial) {
@@ -312,7 +318,7 @@ function initializeChat(socket) {
 	chatContainer.style.margin = 0;
 	chatContainer.style.width = "400px";
 	chatContainer.style.height = "100%";
-	chatContainer.style.zIndex = "9999";
+	chatContainer.style.zIndex = "9997";
 	chatContainer.style.display = "flex";
 	chatContainer.style.alignItems = "center";
 
