@@ -7,7 +7,7 @@ module.exports = (io, customAlphabet) => {
 			let id = customAlphabet("0123456789", 10)();
 			if (!room) {
 				room = customAlphabet("abcdefghijklmnopqrstuvwxyz", 8)();
-				socket.emit("joinURL", `<a target="_blank" href="https://berkeozgen.me/editor/?${room}">https://berkeozgen.me/editor/?${room}</a>`);
+				socket.emit("joinURL", `https://berkeozgen.me/editor/?${room}`);
 			}
 			socket.join(room);
 			socket.to(room).emit("notf", `${name} has joined.`);

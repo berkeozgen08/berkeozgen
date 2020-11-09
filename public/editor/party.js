@@ -12,6 +12,12 @@ const copy = text => {
 	createNotf("Copied.");
 };
 
+const urlify = text => {
+	let urlRegex = /(https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|www\.[a-zA-Z0-9][a-zA-Z0-9-]+[a-zA-Z0-9]\.[^\s]{2,}|https?:\/\/(?:www\.|(?!www))[a-zA-Z0-9]+\.[^\s]{2,}|www\.[a-zA-Z0-9]+\.[^\s]{2,})/gi;
+	return text.replaceAll(urlRegex, url => `<a target="_blank" href="${url}">${url}</a>`);
+	// return text.replace(urlRegex, '<a href="$1">$1</a>')
+}
+
 if (window.innerWidth <= 500) {
 	codeMirror.setOption("indentWithTabs", false);
 }
@@ -99,7 +105,7 @@ const createNotf = message => {
 	let notf = document.createElement("div");
 	notf.classList.add("notification");
 	notf.classList.add("slideIn");
-	notf.innerHTML = message;
+	notf.innerHTML = urlify(message);
 	notf.addEventListener("click", () => removeNotf(notf));
 	setTimeout(() => removeNotf(notf), 5000);
 	document.querySelector(".notification-container").appendChild(notf);
@@ -123,10 +129,7 @@ function join(room, name) {
 	});
 	socket.on("joinURL", data => {
 		createNotf(data);
-		let node = document.createElement("div");
-		node.innerHTML = data;
-		url = node.innerText;
-		copy(url);
+		copy(data);
 	});
 	let detectChange = true;
 	codeMirror.on("change", (ce, e) => {
@@ -428,7 +431,7 @@ function initializeChat(socket) {
 		}
 		blob.style.userSelect = "unset";
 		blob.style.wordBreak = "break-word";
-		blob.innerText = message;
+		blob.innerHTML = urlify(message);
 		blobContainer.appendChild(blob);
 	};
 
