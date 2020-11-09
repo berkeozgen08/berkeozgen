@@ -47,7 +47,12 @@ document.querySelector("select").addEventListener("change", e => {
 	lang();
 });
 
-function loader() {
+function openLoader() {
 	let loader = document.querySelector(".loader-container");
-	loader.classList.toggle("active");
+	loader.classList.add("active");
+}
+
+function closeLoader() {
+	let loader = document.querySelector(".loader-container");
+	loader.classList.remove("active");
 }

@@ -4,7 +4,8 @@ let name;
 const copy = text => {
 	let input = document.createElement("input");
 	input.value = text;
-	document.body.appendChild(input);
+	input.style.zIndex = 9999;
+	document.body.prepend(input);
 	input.select();
 	input.setSelectionRange(0, 99999);
 	document.execCommand("copy");
@@ -90,7 +91,7 @@ if (window.location.search) {
 	document.getElementById("party").addEventListener("click", click);
 
 	document.getElementById("submit").addEventListener("click", e => {
-		loader();
+		openLoader();
 		name = document.getElementById("name").value || "no name";
 		join(undefined, name);
 		let party = document.getElementById("party");
@@ -101,7 +102,7 @@ if (window.location.search) {
 		});
 	});
 
-	loader();
+	openLoader();
 
 	needsInitialization = false;
 }
@@ -124,11 +125,28 @@ const removeNotf = notf => {
 
 let url;
 
+function failedJoin() {
+	copy(codeMirror.getValue());
+	document.querySelector(".error").innerHTML = "Failed to connect<br>Copied";
+}
+
 function join(room, name) {
 	let socket = io.connect("/editor", {
 		"transports": ["websocket"]
 	});
-	socket.on("connect", loader);
+	socket.on("connect", () => {
+		closeLoader();
+		document.querySelector(".error").classList.remove("active");
+		document.querySelector(".error").innerHTML = "Failed to connect<br>Click here to copy the text";
+	});
+	socket.on("connect_error", () => {
+		if (!document.querySelector(".loader-container.active")) {
+			openLoader();
+		}
+		if (!document.querySelector(".error.active")) {
+			document.querySelector(".error").classList.add("active");
+		}
+	});
 	socket.emit("join", { room, name });
 	socket.on("notf", data => {
 		createNotf(data);

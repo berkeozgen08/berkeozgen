@@ -23,8 +23,8 @@ module.exports = (io, customAlphabet) => {
 				socket.to(room).emit("lang", data);
 			});
 			socket.to(room).emit("cursorJoin", { name, id });
-			editor.to(socket.id).emit("currentCursors", ids);
-			ids.push({ id, name });
+			editor.to(socket.id).emit("currentCursors", ids.filter(i => i.room == room));
+			ids.push({ id, name, room });
 			socket.on("cursorActivity", data => {
 				data.name = name;
 				data.id = id;
