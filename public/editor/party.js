@@ -102,7 +102,7 @@ if (window.location.search) {
 		});
 	});
 
-	openLoader();
+	closeLoader();
 
 	needsInitialization = false;
 }

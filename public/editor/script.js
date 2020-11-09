@@ -56,3 +56,4 @@ function closeLoader() {
 	let loader = document.querySelector(".loader-container");
 	loader.classList.remove("active");
 }
+openLoader();
