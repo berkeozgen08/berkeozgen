@@ -1,4 +1,5 @@
-module.exports = (io, customAlphabet) => {
+module.exports = (io, customAlphabet, app) => {
+	const fetch = require("node-fetch");
 	const editor = io.of("/editor");
 	let ids = [];
 	editor.on("connection", socket => {
@@ -40,5 +41,19 @@ module.exports = (io, customAlphabet) => {
 				editor.to(room).emit("removeCursor", id);
 			});
 		});
+	});
+	
+	app.post("/editor/run", async (req, res) => {
+		let CLIENT_SECRET = process.env.CLIENT_SECRET;
+		let RUN_URL = "https://api.hackerearth.com/v3/code/run/";
+		let req1 = await fetch(RUN_URL, {
+			method: "POST",
+			headers: {
+				"content-type": "application/x-www-form-urlencoded"
+			},
+			body: `client_secret=${req.body.CLIENT_SECRET}&async=0&source=${req.body.source}&lang=${req.body.lang}&time_limit=5&memory_limit=262144`
+		});
+		let res1 = await req1.json();
+		res.json(res1);
 	});
 };
