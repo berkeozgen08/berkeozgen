@@ -177,6 +177,8 @@ a:visited {
 	min-width: 100%;
 	left: 0;
 	width: 100%;
+	z-index: 0;
+	box-shadow: 1px 1px 3px black;
 }
 .header div.active {
 	transition: 0.3s;
@@ -191,6 +193,7 @@ a:visited {
     border-right: 10px solid transparent;
 	border-bottom: 10px solid #586173;
 	position: relative;
+	z-index: 1;
 }
 .header ul {
 	min-width: 100%;
