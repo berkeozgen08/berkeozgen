@@ -177,8 +177,6 @@ a:visited {
 	min-width: 100%;
 	left: 0;
 	width: 100%;
-	z-index: 0;
-	box-shadow: 1px 1px 3px black;
 }
 .header div.active {
 	transition: 0.3s;
@@ -203,6 +201,8 @@ a:visited {
 	justify-content: center;
 	align-items: center;
 	flex-direction: column;
+	z-index: 0;
+	box-shadow: 1px 1px 3px black;
 }
 .header li {
 	padding: 4px;
