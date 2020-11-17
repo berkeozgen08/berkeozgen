@@ -207,6 +207,8 @@ a:visited {
 .header li {
 	padding: 4px;
 	list-style: none;
+	text-align: center;
+	white-space: nowrap;
 }
 .chat-container {
 	transition: 0.3s;
