@@ -3,10 +3,12 @@ module.exports = (io, customAlphabet) => {
 	let ids = [];
 	editor.on("connection", socket => {
 		socket.on("join", data => {
-			let { room, name } = data;
+			let { room, name, create } = data;
 			let id = customAlphabet("0123456789", 10)();
 			if (!room) {
 				room = customAlphabet("abcdefghijklmnopqrstuvwxyz", 8)();
+			}
+			if (create) {
 				socket.emit("joinURL", `https://berkeozgen.me/editor/?${room}`);
 			}
 			socket.join(room);

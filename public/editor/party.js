@@ -34,14 +34,6 @@ document.getElementById("submit").addEventListener("click", async e => {
 	document.querySelector(".container").classList.remove("darken");
 });
 
-document.querySelectorAll("input").forEach(i => {
-	i.addEventListener("keydown", e => {
-		if (e.key == "Enter") {
-			document.getElementById("submit").click();
-		}
-	});
-});
-
 let needsInitialization = true;
 
 if (window.location.search) {
@@ -50,7 +42,7 @@ if (window.location.search) {
 	document.getElementById("name").focus();
 	document.getElementById("submit").addEventListener("click", e => {
 		name = document.getElementById("name").value || "no name";
-		join(window.location.search.substring(1), name);
+		join(window.location.search.substring(1), name, false);
 		document.querySelector(".loader-container").classList.toggle("darken");
 	});
 	document.getElementById("submit").value = "Join";
@@ -68,6 +60,15 @@ if (window.location.search) {
 	party.id = "party";
 	document.querySelector(".header").appendChild(party);
 	
+	let roomInput = document.createElement("input");
+	roomInput.type = "text";
+	roomInput.name = "room";
+	roomInput.id = "room";
+	roomInput.placeholder = "Room name (optional)";
+	roomInput.autocomplete = "off";
+	let popup = document.querySelector(".popup");
+	popup.insertBefore(roomInput, popup.children[1]);
+
 	popupcontainer.addEventListener("click", e => {
 		if (e.target == popupcontainer) {
 			popupcontainer.classList.remove("active");
@@ -93,7 +94,7 @@ if (window.location.search) {
 	document.getElementById("submit").addEventListener("click", e => {
 		openLoader();
 		name = document.getElementById("name").value || "no name";
-		join(undefined, name);
+		join(roomInput.value || undefined, name, true);
 		let party = document.getElementById("party");
 		party.innerText = "Copy Invitation";
 		party.removeEventListener("click", click);
@@ -106,6 +107,14 @@ if (window.location.search) {
 
 	needsInitialization = false;
 }
+
+document.querySelectorAll("input").forEach(i => {
+	i.addEventListener("keydown", e => {
+		if (e.key == "Enter") {
+			document.getElementById("submit").click();
+		}
+	});
+});
 
 const createNotf = message => {
 	let notf = document.createElement("div");
@@ -130,7 +139,7 @@ function failedJoin() {
 	document.querySelector(".error").innerHTML = "Failed to connect<br>Copied";
 }
 
-function join(room, name) {
+function join(room, name, create) {
 	let socket = io.connect("/editor", {
 		"transports": ["websocket"]
 	});
@@ -147,13 +156,16 @@ function join(room, name) {
 			document.querySelector(".error").classList.add("active");
 		}
 	});
-	socket.emit("join", { room, name });
+	socket.emit("join", { room, name, create });
 	socket.on("notf", data => {
 		createNotf(data);
 	});
 	socket.on("joinURL", data => {
 		createNotf(data);
 		copy(data);
+		let foo = document.createElement("div");
+		foo.innerHTML = data;
+		url = foo.innerText;
 	});
 	let detectChange = true;
 	codeMirror.on("change", (ce, e) => {
