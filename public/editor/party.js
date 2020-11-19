@@ -29,10 +29,98 @@ let users = new Map();
 
 popupcontainer = document.querySelector(".popup-container");
 
-document.getElementById("submit").addEventListener("click", async e => {
+const click = e => {
+	popupcontainer.classList.add("active");
+	document.querySelector(".container").classList.add("darken");
+	document.getElementById("name").focus();
+};
+
+document.getElementById("submit").addEventListener("click", e => {
 	popupcontainer.classList.remove("active");
 	document.querySelector(".container").classList.remove("darken");
 });
+
+let autoSave = true;
+let autoSaveInterval;
+
+function switchButtons(socket) {
+	let popup = popupcontainer.firstElementChild;
+	Object.values(popup.children).forEach(i => i.remove());
+	if (document.getElementById("party")) {
+		document.getElementById("party").remove();
+	}
+	let options = document.createElement("button");
+	options.innerText = "Options";
+	options.id = "party";
+	options.addEventListener("click", e => {
+		popupcontainer.classList.add("active");
+		document.querySelector(".container").classList.add("darken");
+	});
+	document.querySelector(".header").appendChild(options);
+	popupcontainer.addEventListener("click", e => {
+		if (e.target == popupcontainer) {
+			popupcontainer.classList.remove("active");
+			document.querySelector(".container").classList.remove("darken");
+		}
+	});
+	
+	popupcontainer.addEventListener("keydown", e => {
+		if (e.key == "Escape") {
+			popupcontainer.classList.remove("active");
+			document.querySelector(".container").classList.remove("darken");
+		}
+	});
+	setTimeout(() => {
+		let invite = document.createElement("input");
+		invite.type = "submit";
+		invite.id = "submit";
+		invite.value = "Copy Invitation";
+		invite.addEventListener("click", e => {
+			copy(url);
+			popupcontainer.classList.remove("active");
+			document.querySelector(".container").classList.remove("darken");
+		});
+		let save = document.createElement("input");
+		save.type = "submit";
+		save.id = "submit";
+		save.value = "Save";
+		save.addEventListener("click", e => {
+			socket.emit("save", { text: codeMirror.getValue(), lang: document.querySelector("select").value });
+			createNotf("Saved.");
+			popupcontainer.classList.remove("active");
+			document.querySelector(".container").classList.remove("darken");
+		});
+		let label = document.createElement("label");
+		label.classList.add("switch");
+		let input = document.createElement("input");
+		input.type = "checkbox";
+		let span = document.createElement("span");
+		span.className = "slider";
+		let autoSave = document.createElement("p");
+		autoSave.innerHTML = "Auto Save";
+		let hint = document.createElement("p");
+		hint.innerText = "Saves get removed in 24 hours."
+		hint.style.fontSize = "0.8rem";
+		label.addEventListener("click", e => {
+			if (autoSave) {
+				clearInterval(autoSaveInterval);
+			} else {
+				autoSaveInterval = setInterval(() => {
+					socket.emit("save", { text: codeMirror.getValue(), lang: document.querySelector("select").value });
+					createNotf("Auto saved.");
+				}, 180000);
+			}
+			autoSave = !autoSave;
+		});
+		label.appendChild(input);
+		label.appendChild(span);
+		popup.appendChild(invite);
+		popup.appendChild(save);
+		popup.appendChild(autoSave);
+		popup.appendChild(label);
+		popup.appendChild(hint);
+	}, 500);
+}
 
 let needsInitialization = true;
 
@@ -46,13 +134,6 @@ if (window.location.search) {
 		document.querySelector(".loader-container").classList.toggle("darken");
 	});
 	document.getElementById("submit").value = "Join";
-	let invite = document.createElement("button");
-	invite.innerText = "Copy Invitation";
-	invite.id = "party";
-	invite.addEventListener("click", e => {
-		copy(window.location.href);
-	});
-	document.querySelector(".header").appendChild(invite);
 	document.querySelector(".loader-container").classList.toggle("darken");
 } else {
 	let party = document.createElement("button");
@@ -69,6 +150,14 @@ if (window.location.search) {
 	let popup = document.querySelector(".popup");
 	popup.insertBefore(roomInput, popup.children[1]);
 
+	document.getElementById("party").addEventListener("click", click);
+
+	document.getElementById("submit").addEventListener("click", e => {
+		openLoader();
+		name = document.getElementById("name").value || "no name";
+		join(roomInput.value || undefined, name, true);
+	});
+
 	popupcontainer.addEventListener("click", e => {
 		if (e.target == popupcontainer) {
 			popupcontainer.classList.remove("active");
@@ -81,26 +170,6 @@ if (window.location.search) {
 			popupcontainer.classList.remove("active");
 			document.querySelector(".container").classList.remove("darken");
 		}
-	});
-
-	const click = e => {
-		popupcontainer.classList.add("active");
-		document.querySelector(".container").classList.add("darken");
-		document.getElementById("name").focus();
-	};
-
-	document.getElementById("party").addEventListener("click", click);
-
-	document.getElementById("submit").addEventListener("click", e => {
-		openLoader();
-		name = document.getElementById("name").value || "no name";
-		join(roomInput.value || undefined, name, true);
-		let party = document.getElementById("party");
-		party.innerText = "Copy Invitation";
-		party.removeEventListener("click", click);
-		party.addEventListener("click", e => {
-			copy(url);
-		});
 	});
 
 	closeLoader();
@@ -132,7 +201,7 @@ const removeNotf = notf => {
 	setTimeout(() => notf.remove(), 1000);
 };
 
-let url;
+let url = window.location.href;
 
 function failedJoin() {
 	copy(codeMirror.getValue());
@@ -155,6 +224,11 @@ function join(room, name, create) {
 		if (!document.querySelector(".error.active")) {
 			document.querySelector(".error").classList.add("active");
 		}
+	});
+	socket.on("load", data => {
+		codeMirror.setValue(data.text);
+		document.querySelector("select").value = data.lang;
+		lang();
 	});
 	socket.emit("join", { room, name, create });
 	socket.on("notf", data => {
@@ -336,6 +410,13 @@ function join(room, name, create) {
 	});
 
 	initializeChat(socket);
+
+	autoSaveInterval = setInterval(() => {
+		socket.emit("save", { text: codeMirror.getValue(), lang: document.querySelector("select").value });
+		createNotf("Auto saved.");
+	}, 180000);
+
+	switchButtons(socket);
 }
 
 function initializeChat(socket) {

@@ -17,7 +17,7 @@ body {
 	height: 38px;
 }
 .header > *, input, button, .notification, .chat-blob, ul {
-	transition: 0.3s;
+	/* transition: 0.3s; */
 	font-family: Menlo, Consolas, 'DejaVu Sans Mono', monospace;
 	background-color: #586173;
 	color: #d1daeb;

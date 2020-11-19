@@ -1,4 +1,4 @@
-module.exports = (io, customAlphabet) => {
+module.exports = (io, customAlphabet, editorDB) => {
 	const editor = io.of("/editor");
 	let ids = [];
 	editor.on("connection", socket => {
@@ -35,6 +35,17 @@ module.exports = (io, customAlphabet) => {
 			socket.on("message", data => {
 				socket.to(room).emit("message", data);
 			});
+			socket.on("save", data => {
+				editorDB.find({ room }).then(docs => {
+					if (docs.length == 0) {
+						editorDB.insert({ room, text: data.text, lang: data.lang, lastModified: Date.now() });
+					} else {
+						editorDB.findOneAndUpdate({ room }, { $currentDate: { lastModified: true }, $set: { text: data.text, lang: data.lang } });
+					}
+					socket.to(room).emit("notf", "Saved.");
+				});
+			});
+			editorDB.findOne({ room }).then(doc => { if (doc) socket.emit("load", { text: doc.text, lang: doc.lang }); });
 			socket.on("disconnect", data => {
 				editor.to(room).emit("online", (editor.adapter.rooms[room] || { length: 0 }).length);
 				editor.to(room).emit("notf", `${name} has left.`);

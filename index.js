@@ -23,6 +23,7 @@ const db = monk(process.env.MONGO);
 const snakeDB = db.get("snake");
 const chatlingDB = db.get("chatling");
 const urlDB = db.get("url");
+const editorDB = db.get("editor");
 
 const io = socket(server);
 
@@ -30,7 +31,7 @@ const blackjack = require(path.join(__dirname, "apps", "blackjack.js"))(io);
 const chatling = require(path.join(__dirname, "apps", "chatling.js"))(io, chatlingDB);
 const snake = require(path.join(__dirname, "apps", "snake.js"))(app, snakeDB);
 const urlshortener = require(path.join(__dirname, "apps", "urlshortener.js"))(app, urlDB);
-const editor = require(path.join(__dirname, "apps", "editor.js"))(io, customAlphabet);
+const editor = require(path.join(__dirname, "apps", "editor.js"))(io, customAlphabet, editorDB);
 
 const notFound = path.join(__dirname, "public", "404.html");
 app.use((req, res, next) => {
