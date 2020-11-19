@@ -119,6 +119,26 @@ function switchButtons(socket) {
 		popup.appendChild(autoSave);
 		popup.appendChild(label);
 		popup.appendChild(hint);
+
+		let ctrl = false;
+		document.addEventListener("keydown", e => {
+			switch (e.key) {
+				case "Control":
+					ctrl = true;
+					break;
+				case "s":
+					if (ctrl) {
+						e.preventDefault();
+						socket.emit("save", { text: codeMirror.getValue(), lang: document.querySelector("select").value });
+						createNotf("Saved.");
+					}
+			}
+		});
+		document.addEventListener("keyup", e => {
+			if (e.key == "Control") {
+				ctrl = false;
+			}
+		});
 	}, 500);
 }
 
