@@ -38,10 +38,9 @@ module.exports = (io, customAlphabet, editorDB) => {
 			socket.on("save", data => {
 				editorDB.find({ room }).then(docs => {
 					if (docs.length == 0) {
-						editorDB.insert({ room, text: data.text, lang: data.lang, lastModified: Date.now() });
-					} else {
-						editorDB.findOneAndUpdate({ room }, { $currentDate: { lastModified: true }, $set: { text: data.text, lang: data.lang } });
+						editorDB.insert({ room });
 					}
+					editorDB.findOneAndUpdate({ room }, { $currentDate: { lastModified: true }, $set: { text: data.text, lang: data.lang } });
 					socket.to(room).emit("notf", "Saved.");
 				});
 			});
