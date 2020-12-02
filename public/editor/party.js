@@ -175,7 +175,11 @@ if (window.location.search) {
 	document.getElementById("submit").addEventListener("click", e => {
 		openLoader();
 		name = document.getElementById("name").value || "no name";
-		join(roomInput.value || undefined, name, true);
+		let roomInputValue = roomInput.value;
+		if (roomInputValue) {
+			roomInputValue = roomInputValue.split(" ").join("");
+		}
+		join(roomInputValue || undefined, name, true);
 	});
 
 	popupcontainer.addEventListener("click", e => {
