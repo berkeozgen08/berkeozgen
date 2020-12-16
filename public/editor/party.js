@@ -99,7 +99,7 @@ function switchButtons(socket) {
 		let autoSave = document.createElement("p");
 		autoSave.innerHTML = "Auto Save";
 		let hint = document.createElement("p");
-		hint.innerText = "Saves get removed in 24 hours."
+		hint.innerText = "Saves get removed after 24 hours."
 		hint.style.fontSize = "0.8rem";
 		label.addEventListener("click", e => {
 			if (autoSave) {
