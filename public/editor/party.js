@@ -472,7 +472,7 @@ function initializeChat(socket) {
 	arrow.style.backgroundColor = "#1f2329";
 	arrow.style.color = "#d1daeb";
 	arrow.style.borderRadius = "50%";
-	arrow.style.padding = "16px";
+	arrow.style.padding = "16px 24px 16px 8px";
 	arrow.style.width = "50px";
 	arrow.style.height = "50px";
 	arrow.style.display = "flex";
