@@ -610,7 +610,7 @@ function initializeChat(socket) {
 
 	if (window.innerWidth < 768) {
 		chatContainer.style.width = "90%";
-		arrow.style.padding = "12px";
+		arrow.style.padding = "10px 24px 12px 4px";
 		arrow.style.width = "30px";
 		arrow.style.height = "30px";
 		arrowText.style.fontSize = "20px";
