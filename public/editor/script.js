@@ -78,17 +78,11 @@ window.addEventListener("keydown", e => {
 	}
 });
 
-document.getElementById("openrun").addEventListener("keydown", e => {
-	if (e.ctrlKey && e.key == "F5") {
+document.getElementById("openrun").addEventListener("click", e => {
 		e.preventDefault();
-		if (document.querySelector("select").selectedOptions[0].innerText == "Java") {
-			document.getElementById("input").focus();
-			runcontainer.classList.add("active");
-			document.querySelector(".container").classList.add("darken");
-		} else {
-			createNotf(document.querySelector("select").selectedOptions[0].innerText + " is not supported.");
-		}
-	}
+		document.getElementById("input").focus();
+		runcontainer.classList.add("active");
+		document.querySelector(".container").classList.add("darken");
 });
 
 async function run() {
