@@ -1,4 +1,5 @@
-module.exports = (io, customAlphabet, editorDB) => {
+module.exports = (io, customAlphabet, editorDB, app) => {
+	const fetch = require("node-fetch");
 	const editor = io.of("/editor");
 	let ids = [];
 	editor.on("connection", socket => {
@@ -52,5 +53,17 @@ module.exports = (io, customAlphabet, editorDB) => {
 				editor.to(room).emit("removeCursor", id);
 			});
 		});
+	});
+
+	app.post("/editor/run", async (req, res) => {
+		let req1 = await fetch("https://compile-java.herokuapp.com", {
+			method: "POST",
+			headers: {
+				"content-type": "application/json"
+			},
+			body: JSON.stringify(req.body)
+		});
+		let res1 = await req1.json();
+		res.json(res1);
 	});
 };

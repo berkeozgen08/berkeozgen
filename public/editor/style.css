@@ -46,7 +46,7 @@ select:hover, input:hover, button:hover {
 	top: 5px;
 	right: 3px;
 }
-#submit {
+#submit, #run, #openrun {
 	cursor: pointer;
 }
 .container {
@@ -280,6 +280,14 @@ a:visited {
 	opacity: 1;
 	pointer-events: all;
 	cursor: pointer;
+}
+#openrun {
+	display: none;
+	padding-top: 5px;
+	padding-bottom: 5px;
+}
+#openrun.active {
+	display: inline-block;
 }
 @keyframes spin {
 	0% {

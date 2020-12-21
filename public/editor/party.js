@@ -120,23 +120,11 @@ function switchButtons(socket) {
 		popup.appendChild(label);
 		popup.appendChild(hint);
 
-		let ctrl = false;
 		document.addEventListener("keydown", e => {
-			switch (e.key) {
-				case "Control":
-					ctrl = true;
-					break;
-				case "s":
-					if (ctrl) {
-						e.preventDefault();
-						socket.emit("save", { text: codeMirror.getValue(), lang: document.querySelector("select").value });
-						createNotf("Saved.");
-					}
-			}
-		});
-		document.addEventListener("keyup", e => {
-			if (e.key == "Control") {
-				ctrl = false;
+			if (e.ctrlKey && e.key == "s") {
+				e.preventDefault();
+				socket.emit("save", { text: codeMirror.getValue(), lang: document.querySelector("select").value });
+				createNotf("Saved.");
 			}
 		});
 	}, 500);
@@ -201,7 +189,7 @@ if (window.location.search) {
 	needsInitialization = false;
 }
 
-document.querySelectorAll("input").forEach(i => {
+document.querySelectorAll(".popup:not(.run) input").forEach(i => {
 	i.addEventListener("keydown", e => {
 		if (e.key == "Enter") {
 			document.getElementById("submit").click();

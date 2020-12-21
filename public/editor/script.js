@@ -1,3 +1,5 @@
+openLoader();
+
 let codeMirror = CodeMirror(document.getElementById("code"), {
 	value: value,
 	mode:  "null",
@@ -21,8 +23,8 @@ if (window.innerWidth >= 768) {
 	codeMirror.setOption("scrollbarStyle", "overlay");
 }
 
-const lang = async () => {
-	let mime = document.querySelector("select").value;
+const lang = async function() {
+	let mime = this.value;
 	let mode = CodeMirror.findModeByMIME(mime).mode;
 	if (mode != "null") {
 		if (mode.includes("html")) {
@@ -41,11 +43,15 @@ const lang = async () => {
 		eval(parsed);
 	}
 	codeMirror.setOption("mode", mime);
+
+	if (this.selectedOptions[0].innerText == "Java") {
+		document.getElementById("openrun").classList.add("active");
+	} else {
+		document.getElementById("openrun").classList.remove("active");
+	}
 }
 
-document.querySelector("select").addEventListener("change", e => {
-	lang();
-});
+document.querySelector("select").addEventListener("change", lang);
 
 function openLoader() {
 	let loader = document.querySelector(".loader-container");
@@ -56,4 +62,84 @@ function closeLoader() {
 	let loader = document.querySelector(".loader-container");
 	loader.classList.remove("active");
 }
-openLoader();
+
+let runcontainer = document.querySelector(".run-container");
+
+window.addEventListener("keydown", e => {
+	if (e.ctrlKey && e.key == "F5") {
+		e.preventDefault();
+		if (document.querySelector("select").selectedOptions[0].innerText == "Java") {
+			document.getElementById("input").focus();
+			runcontainer.classList.add("active");
+			document.querySelector(".container").classList.add("darken");
+		} else {
+			createNotf(document.querySelector("select").selectedOptions[0].innerText + " is not supported.");
+		}
+	}
+});
+
+document.getElementById("openrun").addEventListener("keydown", e => {
+	if (e.ctrlKey && e.key == "F5") {
+		e.preventDefault();
+		if (document.querySelector("select").selectedOptions[0].innerText == "Java") {
+			document.getElementById("input").focus();
+			runcontainer.classList.add("active");
+			document.querySelector(".container").classList.add("darken");
+		} else {
+			createNotf(document.querySelector("select").selectedOptions[0].innerText + " is not supported.");
+		}
+	}
+});
+
+async function run() {
+	let req = await fetch("/editor/run", {
+		method: "POST",
+		headers: {
+			"content-type": "application/json"
+		},
+		body: JSON.stringify({
+			code: codeMirror.getValue(),
+			input: document.querySelector("#input").value
+		})
+	});
+	let {output, error} = await req.json();
+	let str = "";
+	if (output && error) {
+		str += output;
+		str += error;
+	} else if (output) {
+		str += output;
+	} else {
+		str += error;
+	}
+	createNotf(str);
+}
+
+document.getElementById("run").addEventListener("click", e => {
+	run();
+	runcontainer.classList.remove("active");
+	document.body.focus();
+	document.querySelector(".container").classList.remove("darken");
+});
+
+runcontainer.addEventListener("click", e => {
+	if (e.target == runcontainer) {
+		runcontainer.classList.remove("active");
+		document.querySelector(".container").classList.remove("darken");
+	}
+});
+
+runcontainer.addEventListener("keydown", e => {
+	if (e.key == "Escape") {
+		runcontainer.classList.remove("active");
+		document.querySelector(".container").classList.remove("darken");
+	}
+});
+
+document.querySelectorAll(".run input").forEach(i => {
+	i.addEventListener("keydown", e => {
+		if (e.key == "Enter") {
+			document.getElementById("run").click();
+		}
+	});
+});

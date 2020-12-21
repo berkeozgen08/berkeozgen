@@ -31,7 +31,7 @@ const blackjack = require(path.join(__dirname, "apps", "blackjack.js"))(io);
 const chatling = require(path.join(__dirname, "apps", "chatling.js"))(io, chatlingDB);
 const snake = require(path.join(__dirname, "apps", "snake.js"))(app, snakeDB);
 const urlshortener = require(path.join(__dirname, "apps", "urlshortener.js"))(app, urlDB);
-const editor = require(path.join(__dirname, "apps", "editor.js"))(io, customAlphabet, editorDB);
+const editor = require(path.join(__dirname, "apps", "editor.js"))(io, customAlphabet, editorDB, app);
 
 const notFound = path.join(__dirname, "public", "404.html");
 app.use((req, res, next) => {

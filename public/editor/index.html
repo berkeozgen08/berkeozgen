@@ -197,6 +197,7 @@
 				<option value="text/x-msgenny" id="mscgen">msgenny</option>
 				<option value="text/webassembly" id="wast">WebAssembly</option>
 			</select>
+			<button id="openrun">Run</button>
 		</div>
 		<div id="code"></div>
 	</div>
@@ -204,6 +205,12 @@
 		<div class="popup">
 			<input type="text" name="name" id="name" placeholder="Nickname" autocomplete="off">
 			<input type="submit" id="submit" value="Create">
+		</div>
+	</div>
+	<div class="popup-container run-container">
+		<div class="popup run">
+			<input type="text" name="input" id="input" placeholder="Inputs" autocomplete="off">
+			<input type="submit" id="run" value="Run">
 		</div>
 	</div>
 	<div class="notification-container"></div>
