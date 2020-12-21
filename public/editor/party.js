@@ -197,13 +197,13 @@ document.querySelectorAll(".popup:not(.run) input").forEach(i => {
 	});
 });
 
-const createNotf = message => {
+const createNotf = (message, time = 5000) => {
 	let notf = document.createElement("div");
 	notf.classList.add("notification");
 	notf.classList.add("slideIn");
 	notf.innerHTML = urlify(message);
 	notf.addEventListener("click", () => removeNotf(notf));
-	setTimeout(() => removeNotf(notf), 5000);
+	setTimeout(() => removeNotf(notf), time);
 	document.querySelector(".notification-container").appendChild(notf);
 };
 

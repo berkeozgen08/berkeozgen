@@ -23,8 +23,8 @@ if (window.innerWidth >= 768) {
 	codeMirror.setOption("scrollbarStyle", "overlay");
 }
 
-const lang = async function() {
-	let mime = this.value;
+const lang = async () => {
+	let mime = document.querySelector("select").value;
 	let mode = CodeMirror.findModeByMIME(mime).mode;
 	if (mode != "null") {
 		if (mode.includes("html")) {
@@ -44,7 +44,7 @@ const lang = async function() {
 	}
 	codeMirror.setOption("mode", mime);
 
-	if (this.selectedOptions[0].innerText == "Java") {
+	if (document.querySelector("select").selectedOptions[0].innerText == "Java") {
 		document.getElementById("openrun").classList.add("active");
 	} else {
 		document.getElementById("openrun").classList.remove("active");
@@ -86,6 +86,7 @@ document.getElementById("openrun").addEventListener("click", e => {
 });
 
 async function run() {
+	createNotf("Running.");
 	let req = await fetch("/editor/run", {
 		method: "POST",
 		headers: {
@@ -106,13 +107,12 @@ async function run() {
 	} else {
 		str += error;
 	}
-	createNotf(str);
+	createNotf(str, 10000);
 }
 
 document.getElementById("run").addEventListener("click", e => {
 	run();
 	runcontainer.classList.remove("active");
-	document.body.focus();
 	document.querySelector(".container").classList.remove("darken");
 });
 
