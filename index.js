@@ -11,7 +11,7 @@ const app = express();
 
 app.use(hsts());
 app.use(express.static(path.join(__dirname, "public")));
-app.use(express.json({limit: "1kb"}));
+app.use(express.json({limit: "128kb"}));
 app.use(favicon(path.join(__dirname, "public", "images", "favicon.ico")));
 
 const port =  process.env.PORT || 3000;
