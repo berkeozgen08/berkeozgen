@@ -382,7 +382,7 @@ function join(room, name, create) {
 			}
 			document.querySelector(".CodeMirror-scroll").appendChild(nameBox);
 			nameBox.style.top = `${cursorCoords.bottom}px`;
-			nameBox.style.left = `${codeMirror.cursorCoords(head).left}px`;
+			nameBox.style.left = `${cursorCoords.left + parseInt(document.querySelector(".CodeMirror-linenumbers").style.width.replace("px", ""))}px`; // codeMirror.cursorCoords(head).left
 			user.nameBox = nameBox;
 		}
 		cursorElement.addEventListener("mouseover", e => {
@@ -396,7 +396,7 @@ function join(room, name, create) {
 			}, 3000);
 		});
 		user.nameBox.style.top = `${cursorCoords.bottom}px`;
-		user.nameBox.style.left = `${codeMirror.cursorCoords(head).left}px`;
+		user.nameBox.style.left = `${cursorCoords.left + parseInt(document.querySelector(".CodeMirror-linenumbers").style.width.replace("px", ""))}px`;
 		user.marker = codeMirror.setBookmark(head, { widget: cursorElement });
 		if (head.line > anchor.line || (head.line == anchor.line && head.ch > anchor.ch)) {
 			user.selection = codeMirror.markText(anchor, head, { className: "CodeMirror-selected", css: `background: ${user.color.replace(")", ", 0.2)")}` });
