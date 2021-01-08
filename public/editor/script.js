@@ -107,7 +107,7 @@ async function run() {
 	} else {
 		str += error;
 	}
-	createNotf(str, 10000);
+	createNotf(str.replaceAll("\n", "<br>"), 10000);
 }
 
 document.getElementById("run").addEventListener("click", e => {
