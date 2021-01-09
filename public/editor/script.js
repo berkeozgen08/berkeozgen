@@ -85,8 +85,11 @@ document.getElementById("openrun").addEventListener("click", e => {
 		document.querySelector(".container").classList.add("darken");
 });
 
-async function run() {
+async function run(socket) {
 	createNotf("Running.");
+	if (socket) {
+		socket.emit("notf", "Running.");
+	}
 	let req = await fetch("/editor/run", {
 		method: "POST",
 		headers: {
@@ -108,13 +111,18 @@ async function run() {
 		str += error;
 	}
 	createNotf(str.replaceAll("\n", "<br>"), 10000);
+	if (socket) {
+		socket.emit("run", str);
+	}
 }
 
-document.getElementById("run").addEventListener("click", e => {
-	run();
+const runListener = (e, socket = null) => {
+	run(socket);
 	runcontainer.classList.remove("active");
 	document.querySelector(".container").classList.remove("darken");
-});
+};
+
+document.getElementById("run").addEventListener("click", runListener);
 
 runcontainer.addEventListener("click", e => {
 	if (e.target == runcontainer) {

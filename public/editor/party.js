@@ -429,6 +429,12 @@ function join(room, name, create) {
 	}, 180000);
 
 	switchButtons(socket);
+	
+	document.getElementById("run").removeEventListener("click", runListener);
+	document.getElementById("run").addEventListener("click", e => runListener(e, socket));
+	socket.on("run", data => {
+		createNotf(data.replaceAll("\n", "<br>"), 10000);
+	});
 }
 
 function initializeChat(socket) {

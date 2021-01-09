@@ -14,6 +14,9 @@ module.exports = (io, customAlphabet, editorDB, app) => {
 			}
 			socket.join(room);
 			socket.to(room).emit("notf", `${name} has joined.`);
+			socket.on("notf", data => {
+				socket.to(room).emit("notf", data);
+			});
 			editor.to(room).emit("online", (editor.adapter.rooms[room] || { length: 0 }).length);
 			socket.on("change", data => {
 				socket.to(room).emit("change", data);
@@ -46,6 +49,9 @@ module.exports = (io, customAlphabet, editorDB, app) => {
 				});
 			});
 			editorDB.findOne({ room }).then(doc => { if (doc) socket.emit("load", { text: doc.text, lang: doc.lang }); });
+			socket.on("run", data => {
+				socket.to(room).emit("run", data);
+			});
 			socket.on("disconnect", data => {
 				editor.to(room).emit("online", (editor.adapter.rooms[room] || { length: 0 }).length);
 				editor.to(room).emit("notf", `${name} has left.`);
