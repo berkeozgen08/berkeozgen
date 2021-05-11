@@ -46,6 +46,9 @@ const lang = async () => {
 
 	if (document.querySelector("select").selectedOptions[0].innerText == "Java") {
 		document.getElementById("openrun").classList.add("active");
+		if (value == codeMirror.getValue()) {
+			codeMirror.setValue("public class Main {\n\tpublic static void main(String[] args) {\n\t\tSystem.out.println(\"Hello, World!\");\n\t}\n}");
+		}
 	} else {
 		document.getElementById("openrun").classList.remove("active");
 	}
